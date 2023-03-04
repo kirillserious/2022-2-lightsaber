@@ -2,7 +2,7 @@ import sympy
 
 # Параметры программы
 links_count = 3
-calculate_inertia = True
+calculate_inertia = False #True
 
 # Константы
 g = sympy.Symbol('g') # Ускорение свободного падения
@@ -45,7 +45,7 @@ y_center = [
 
 # Скорость центра каждого звена в квадрате
 v_square = [
-    sympy.diff(x_center[i], t) + sympy.diff(y_center[i], t)
+    sympy.diff(x_center[i], t)**2 + sympy.diff(y_center[i], t)**2
     for i in range(0, links_count)
 ]
 
