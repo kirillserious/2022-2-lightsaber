@@ -13,22 +13,24 @@ import scipy.integrate
 # Classic case
 
 # Дано:
+m0 = 1
 m1 = 1
-m2 = 2
+m2 = 1
+
+l0 = 1
 l1 = 1
-l2 = 2
-I1 = 0.025
-I2 = 0.045
+l2 = 1
+
+I0 = m0 * l0 * l0 / 12
+I1 = m1 * l1 * l1 / 12
+I2 = m2 * l2 * l2 / 12
+
+
 
 # Предпосчитано:
-d1 = I1 +I2 + m2 * l1 * l1
-d2 = m2 * l1 * 0.16
-d3 = I2
-
 def M(theta: Vector) -> Matrix:
     return Matrix([
-        [3+np.cos(theta[1]), 2+np.cos(theta[1])],
-        [2+np.cos(theta[1]), 2]
+        [I0 + m0*(l0**2*sin(q0(t))**2/2, ]
     ])
 
 def C(theta: Vector, dtheta: Vector) -> Matrix:

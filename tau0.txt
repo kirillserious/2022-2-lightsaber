@@ -1,0 +1,25 @@
+I0*Derivative(q0(t), (t, 2))
++
+g*l0*m0*cos(q0(t))/2
++
+g*l0*m1*cos(q0(t))
++
+g*l0*m2*cos(q0(t))
++
+l0**2*m0*Derivative(q0(t), (t, 2))/4
++
+l0**2*m1*Derivative(q0(t), (t, 2))
++
+l0**2*m2*Derivative(q0(t), (t, 2))
++
+l0*l1*m1*sin(q0(t) - q1(t))*Derivative(q1(t), t)**2/2
++
+l0*l1*m1*cos(q0(t) - q1(t))*Derivative(q1(t), (t, 2))/2
++
+l0*l1*m2*sin(q0(t) - q1(t))*Derivative(q1(t), t)**2
++
+l0*l1*m2*cos(q0(t) - q1(t))*Derivative(q1(t), (t, 2))
++
+l0*l2*m2*sin(q0(t) - q2(t))*Derivative(q2(t), t)**2/2
++
+l0*l2*m2*cos(q0(t) - q2(t))*Derivative(q2(t), (t, 2))/2

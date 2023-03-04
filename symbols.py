@@ -76,6 +76,31 @@ tau = [
     for i in range(0, links_count)
 ]
 
+print('Уравнение динамики:\n')
 for i in range(0, links_count):
-    print('tau%d = '%(i) + str(tau[i]))
+    print('tau%d = '%(i) + str(sympy.simplify(tau[i])))
+    print()
+print()
 
+#
+# Уравнение кинематики, к сожалению посчитано из динамики вручную
+#
+M = sympy.matrices.Matrix([
+    [
+        I[0] + l[0]**2*m[0]/4 + l[0]**2*m[1] + l[0]**2*m[2],
+        l[0]*l[1]*m[1]*sympy.cos(q[0] - q[1])/2,
+        0
+    ],
+    [
+        l[0]*l[1]*m[1]*sympy.cos(q[0] - q[1])/2 + l[0]*l[1]*m[2]*sympy.cos(q[0] - q[1]),
+        I[1] + l[1]**2*m[1]/4 + l[1]**2*m[2],
+        l[1]*l[2]*m[2]*sympy.cos(q[1] - q[2])/2
+    ],
+    [
+        l[0]*l[2]*m[2]*sympy.cos(q[0] - q[2])/2,
+        l[1]*l[2]*m[2]*sympy.cos(q[1] - q[2])/2,
+        I[2] + l[2]**2*m[2]/4
+    ]
+])
+
+print(sympy.simplify(M.inv(method='LU')))
