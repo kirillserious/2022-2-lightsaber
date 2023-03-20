@@ -13,4 +13,5 @@ scipy==1.10.1
 six==1.16.0
 style==1.1.0
 sympy==1.11.1
+tqdm==4.65.0
 update==0.0.1

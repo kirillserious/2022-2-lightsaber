@@ -1,0 +1,306 @@
+\documentclass[russian,14pt,twoside]{extreport}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+%%----------------------------------------------------------------------------
+\usepackage{setspace}
+\selectfont
+\parindent=18pt
+\frenchspacing
+%%----------------------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{amsthm}
+\usepackage{etoolbox}
+%\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[all]{xy}
+\usepackage{url}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+%%----------------------------------------------------------------------------
+\usepackage[%
+        a4paper,%
+        includehead,%
+        left=2cm,%
+        top=2cm,%
+        right=2cm,%
+        bottom=2cm,%
+        headheight=0.7cm,%
+        headsep=0.3cm,%
+        footskip=1.6cm]{geometry}
+\special{papersize=210mm,297mm}
+%%----------------------------------------------------------------------------
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+%%----------------------------------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}%
+\fancyhead{}%
+\fancyfoot{}%
+\fancyhead[LE,RO]{\normalsize \thepage}%
+\fancyhead[RE,LO]{\leftmark}
+%%----------------------------------------------------------------------------
+\raggedbottom
+%%----------------------------------------------------------------------------
+\makeatletter
+%%----------------------------------------------------------------------------
+\protected\def\switchinitials#1{%
+\begingroup%
+\edef\temp{\endgroup%
+    \noexpand\switchinitials@fixcomma%
+    \forcsvlist{\switchinitials@item}{#1}\relax}%
+    \temp}
+\def\switchinitials@fixcomma, #1{#1}
+\def\switchinitials@item#1{, \switchinitials@single#1\relax}
+\def\switchinitials@single#1~#2\relax{#2~#1}
+%% Счетчик для списка авторов в колонтитуле
+\newcounter{headauthorscounter}
+\def\saveauthor#1{%
+    \stepcounter{headauthorscounter}%
+    \expandafter\def\csname headauthorslist\theheadauthorscounter%
+        \endcsname{#1}}
+\def\ifnthauthor#1{%
+    \ifcsname headauthorslist#1\endcsname}
+\def\getnthauthor#1{%
+    , \csname headauthorslist#1\endcsname}
+\def\putnthauthor#1{%
+    \ifnthauthor#1\getnthauthor#1\fi}
+\def\getfirstivauthors{%
+    \noexpand\switchinitials@fixcomma%
+    \putnthauthor1\putnthauthor2\putnthauthor3\putnthauthor4%
+    \ifnthauthor5 и др.\fi}
+%%----------------------------------------------------------------------------
+\newenvironment{lmrarticle}[3][russian]{%
+\setcounter{figure}{0}
+\setcounter{equation}{0}
+\setcounter{definition}{0}
+\setcounter{theorem}{0}
+\setcounter{lemma}{0}
+\setcounter{statement}{0}
+\setcounter{remark}{0}
+\setcounter{corollary}{0}
+\pagebreak[2]
+\vskip 12pt plus 6pt minus 3pt
+\vglue 4pt plus 2pt minus 2pt
+{\leftskip=1.5\parindent
+\rightskip=1.5\parindent
+\vbox{\centering\sffamily\scshape\bfseries\boldmath\Large #2\unboldmath}}
+\setcounter{headauthorscounter}{0}
+\forcsvlist{\saveauthor}{#3}
+\markboth{\getfirstivauthors}{}
+\nopagebreak
+\vskip 6pt
+\@afterheading
+}{%
+}
+%%----------------------------------------------------------------------------
+\newcommand\OneAuthor[3]{%
+\vbox{%
+{\centering\bfseries\normalsize #1\par}
+\vskip 3pt
+\raggedright
+\leavevmode\noindent\footnotesize
+\hangindent=18pt\hangafter=1
+#2, e-mail: \texttt{#3}\\*\par}
+\nopagebreak
+\medskip
+\@afterheading
+}
+%%----------------------------------------------------------------------------
+\newcommand\TwoAuthor[6]{%
+\vbox{%
+{\centering\bfseries\normalsize #1$^1$, #4$^2$\\}
+\vskip 3pt
+\raggedright
+\leavevmode\noindent\footnotesize
+\hangindent=18pt\hangafter=1
+$^1$ {#2}, e-mail: \texttt{#3}\par
+\hangindent=18pt\hangafter=1
+$^2$ {#5}, e-mail: \texttt{#6}\\*\par}
+\nopagebreak
+\smallskip
+\@afterheading
+}
+%%----------------------------------------------------------------------------
+\newcommand\ThreeAuthor[9]{%
+\vbox{%
+{\centering\bfseries\normalsize #1$^1$, #4$^2$, #7$^3$\\}
+\vskip 3pt
+\raggedright
+\leavevmode\noindent\footnotesize
+\hangindent=18pt\hangafter=1
+$^1$ {#2}, e-mail: \texttt{#3}\par
+\hangindent=18pt\hangafter=1
+$^2$ {#5}, e-mail: \texttt{#6}\par
+\hangindent=18pt\hangafter=1
+$^3$ {#8}, e-mail: \texttt{#9}\\*\par}
+\nopagebreak
+\smallskip
+\@afterheading
+}
+%%----------------------------------------------------------------------------
+\newcommand\FourAuthor[9]{%
+\def\Argi{{#1}}%
+\def\Argii{{#2}}%
+\def\Argiii{{#3}}%
+\def\Argiv{{#4}}%
+\def\Argv{{#5}}%
+\def\Argvi{{#6}}%
+\def\Argvii{{#7}}%
+\def\Argviii{{#8}}%
+\def\Argix{{#9}}%
+\FourAuthorContinue
+}
+\newcommand\FourAuthorContinue[3]{%
+\vbox{%
+{\centering
+{\bfseries\normalsize \Argi$^1$, \Argiv$^2$, \Argvii$^3$, #1$^4$\\}}
+\vskip 3pt
+\raggedright
+\leavevmode\noindent\footnotesize
+\hangindent=18pt\hangafter=1
+$^1$ \Argii, e-mail: \texttt{\Argiii}\par
+\hangindent=18pt\hangafter=1
+$^2$ \Argv, e-mail: \texttt{\Argvi}\par
+\hangindent=18pt\hangafter=1
+$^3$ \Argviii, e-mail: \texttt{\Argix}\par
+\hangindent=18pt\hangafter=1
+$^4$ #2, e-mail: \texttt{#3}\\*\par}
+\nopagebreak
+\smallskip
+\@afterheading
+}
+%%----------------------------------------------------------------------------
+\newcommand\FiveAuthor[9]{%
+\def\Argi{{#1}}%
+\def\Argii{{#2}}%
+\def\Argiii{{#3}}%
+\def\Argiv{{#4}}%
+\def\Argv{{#5}}%
+\def\Argvi{{#6}}%
+\def\Argvii{{#7}}%
+\def\Argviii{{#8}}%
+\def\Argix{{#9}}%
+\FiveAuthorContinue
+}
+\newcommand\FiveAuthorContinue[6]{%
+\vbox{%
+{\centering
+\bfseries\normalsize \Argi$^1$, \Argiv$^2$, \Argvii$^3$, #1$^4$, #4$^5$\\}
+\vskip 3pt
+\raggedright
+\leavevmode\noindent\footnotesize
+\hangindent=18pt\hangafter=1
+$^1$ {\Argii}, e-mail: \texttt{\Argiii}\par
+\hangindent=18pt\hangafter=1
+$^2$ {\Argv}, e-mail: \texttt{\Argvi}\par
+\hangindent=18pt\hangafter=1
+$^3$ {\Argviii}, e-mail: \texttt{\Argix}\par
+\hangindent=18pt\hangafter=1
+$^4$ {#2}, e-mail: \texttt{#3}\par
+\hangindent=18pt\hangafter=1
+$^5$ {#5}, e-mail: \texttt{#6}\\*\par}
+\nopagebreak
+\smallskip
+\@afterheading
+}
+%%----------------------------------------------------------------------------
+\titleformat{\paragraph}[runin]{\bfseries}{}{0pt}{}
+\titleformat{\section}{\bfseries}{}{0pt}{}
+\let\subsection\@undefined
+\let\subsubsection\@undefined
+\let\subparagraph\@undefined
+%%----------------------------------------------------------------------------
+\newtheorem{definition}{\protect\definitionname}
+\newtheorem*{definition*}{\protect\definitionname}
+\newtheorem{theorem}{\protect\theoremname}
+\newtheorem*{theorem*}{\protect\theoremname}
+\newtheorem{lemma}{\protect\lemmaname}
+\newtheorem*{lemma*}{\protect\lemmaname}
+\newtheorem{statement}{\protect\statementname}
+\newtheorem*{statement*}{\protect\statementname}
+\newtheorem{remark}{\protect\remarkname}
+\newtheorem*{remark*}{\protect\remarkname}
+\newtheorem{corollary}{\protect\corollaryname}
+\newtheorem*{corollary*}{\protect\corollaryname}
+\newcommand{\definitionname}{}
+\newcommand{\theoremname}{}
+\newcommand{\lemmaname}{}
+\newcommand{\statementname}{}
+\newcommand{\remarkname}{}
+\newcommand{\corollaryname}{}
+\addto\captionsrussian{%
+  \renewcommand{\definitionname}{Определение}%
+  \renewcommand{\theoremname}{Теорема}%
+  \renewcommand{\lemmaname}{Лемма}%
+  \renewcommand{\statementname}{Утверждение}%
+  \renewcommand{\remarkname}{Замечание}%
+  \renewcommand{\corollaryname}{Следствие}%
+}
+%%----------------------------------------------------------------------------
+\usepackage{enumitem}
+\setlist[enumerate]{%
+    %labelindent=0pt by default
+    leftmargin=*,%
+    topsep=4pt plus 2pt minus 2pt,%
+    partopsep=2pt plus 1pt minus 1pt,%
+    parsep=2pt plus 1pt,%
+    itemsep=2pt plus 1pt%
+}
+\setlist[itemize]{%
+    %labelindent=0pt by default
+    label={---},%
+    leftmargin=*,%
+    topsep=4pt plus 2pt minus 2pt,%
+    partopsep=2pt plus 1pt minus 1pt,%
+    parsep=2pt plus 1pt,%
+    itemsep=2pt plus 1pt%
+}
+%%----------------------------------------------------------------------------
+\newenvironment{lmrreferences}{
+\pagebreak[1]
+\medskip
+\noindent
+{\scshape\large Список литературы}
+\par\nopagebreak
+\smallskip
+\@afterheading
+\begin{enumerate}[label={[\arabic*]},leftmargin=*]
+\sloppy
+}{
+\end{enumerate}
+}
+%%----------------------------------------------------------------------------
+\binoppenalty=10000
+\relpenalty=10000
+\@clubpenalty=10000
+\clubpenalty=10000
+\widowpenalty=10000
+%%----------------------------------------------------------------------------
+%%----------------------------------------------------------------------------
+\let\le\leqslant
+\let\leq\leqslant
+\let\ge\geqslant
+\let\geq\geqslant
+\let\emptyset\varnothing
+\apptocmd\normalsize{%
+  \abovedisplayskip=6pt plus 4pt minus 3pt
+  \belowdisplayskip=6pt plus 4pt minus 3pt
+  \abovedisplayshortskip=3pt plus 6pt minus 1pt
+  \belowdisplayshortskip=3pt plus 6pt minus 1pt
+}
+%%----------------------------------------------------------------------------
+\titlespacing*{\paragraph}{\parindent}{0pt}{4pt}
+%%----------------------------------------------------------------------------
+%%----------------------------------------------------------------------------
+\makeatother
+%%----------------------------------------------------------------------------
+\begin{document}
+    \input{article_unix_utf8.tex}
+\end{document}

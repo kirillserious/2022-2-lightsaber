@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sympy
 
 # Параметры программы
@@ -15,7 +17,7 @@ m = sympy.symbols('m(:%d)'%(links_count))
 ## Моменты инерции каждого звена
 if calculate_inertia:
     I = [
-        m[i] * l[i] * l[i] / 12
+        m[i] * l[i] * l[i] / 3
         for i in range(0, links_count)
     ]
 else:
@@ -87,12 +89,12 @@ print()
 #
 M = sympy.matrices.Matrix([
     [
-        I[0] + l[0]**2*m[0]/4 + l[0]**2*m[1] + l[0]**2*m[2],
-        l[0]*l[1]*m[1]*sympy.cos(q[0] - q[1])/2,
-        0
+        I[0] + l[0]**2*(m[0]/4 + m[1] + m[2]),
+        l[0]*l[1]*(m[1]/2 - m[2])*sympy.cos(q[0] - q[1]),
+        l[0]*l[2]*m[2]*sympy.cos(q[0] - q[2])/2
     ],
     [
-        l[0]*l[1]*m[1]*sympy.cos(q[0] - q[1])/2 + l[0]*l[1]*m[2]*sympy.cos(q[0] - q[1]),
+        l[0]*l[1]*(m[1]/2 - m[2])*sympy.cos(q[0] - q[1]),
         I[1] + l[1]**2*m[1]/4 + l[1]**2*m[2],
         l[1]*l[2]*m[2]*sympy.cos(q[1] - q[2])/2
     ],
@@ -103,4 +105,4 @@ M = sympy.matrices.Matrix([
     ]
 ])
 
-print(sympy.simplify(M.inv(method='LU')))
+#print(sympy.simplify(M.inv(method='LU')))
