@@ -1,9 +1,12 @@
 import numpy as np
 
-from common import Vector, Matrix
-from common import m, l, I, g, delta_t
+from common import Vector, Matrix, Model
 
-def fk_u(z: Vector, u: Vector)->Matrix:
+def fk_u(model: Model, z: Vector, u: Vector, delta_t:float)->Matrix:
+    l = model.l
+    m = model.m
+    g = model.g
+    I = model.I
     '''
         fk_u - Якобиан функции fk(z, u) по u
     '''

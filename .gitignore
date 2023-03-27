@@ -3,5 +3,9 @@ venv
 *.fls
 *.log
 *.synctex.gz
+*.nav
+*.out
+*.snm
+*.toc
 *.fdb_latexmk
 *.DS_Store

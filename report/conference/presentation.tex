@@ -1,0 +1,134 @@
+\documentclass[16pt]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[main=russian, english]{babel}
+\usepackage{amssymb}
+\usetheme{Warsaw}
+
+\title[Конференция <<Ломоносовские чтения 2023>>]
+        {Математическое моделирование движения руки и поведенческих движений}
+\author[К. Ю. Егоров]
+        {студент 2 курса магистратуры К. Ю. Егоров\\
+        научный руководитель --- к.ф-м.н., доцент И. В. Востриков}
+\institute{Кафедра системного анализа\\ ВМК МГУ}
+\date{\today}
+
+% Добавляем в панель навигации номер страницы
+\setbeamertemplate{navigation symbols}{
+        \insertslidenavigationsymbol
+        \insertframenavigationsymbol
+        \insertsubsectionnavigationsymbol
+        \insertsectionnavigationsymbol
+        \insertdocnavigationsymbol
+        \insertbackfindforwardnavigationsymbol
+        \hspace{1em}
+        \usebeamerfont{footline}
+        \insertframenumber /\inserttotalframenumber
+        %
+}
+
+\begin{document}
+    \begin{frame}
+        \titlepage
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Зачем это всё}
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Математическое моделирование}
+        Метод Эйлера--Лагранжа
+        $$
+            \mathcal{L} = \Pi - K
+            \;\Longrightarrow\;
+            \tau_i
+            =
+              \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot \theta_i}\right)
+            - \frac{\partial \mathcal{L}}{\partial \theta_i}
+        $$
+        \begin{block}{Уравнение динамики}
+            $$
+                \tau = M(\theta)\ddot\theta + L(\theta, \dot\theta)
+            $$
+            \begin{itemize}
+                \item $\tau_i$~--- момент силы, действующей на $i$-е сочленение
+                \item $M(\theta)=M^{\mathrm{T}}(\theta)>0$~--- матрица инерции
+                \item $L(\theta, \dot\theta)$~--- вектор центростремительных и корелисовых сил
+            \end{itemize}
+        \end{block}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Трудозатраты}
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        \begin{block}{Формализация энергетических затрат}
+            $$
+                \mbox{Затраты}\, = \int\limits_{t_{start}}^{t_{final}}\dot\tau\,dt
+            $$
+        \end{block}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Задача достижимости}
+        Введем $x = [\theta\;\dot\theta\;\dot \tau]^{\mathrm{T}}$, тогда
+        \begin{align*}
+            &\dot x = f(x)u + g(x)\\
+            &x(t_{start}) = x^{start}
+        \end{align*}
+        Задача минимизации функционала:
+        $$
+            J = \langle x-x^{final}, Q^{final}(x-x^{final}) \rangle + \int\limits_{t_{start}}^{t_{final}}\langle u, Ru\rangle\,dt
+        $$
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Дискретизация}
+        $$
+            \dot x = f(x, u)\;\Longrightarrow\; x^{k+1} = \Delta t \cdot f(x^{k}, u^{k}) + x^{k}
+        $$
+    \end{frame}
+
+    \begin{frame}{Референсная траектория}
+        \begin{block}{Зачем}
+            \begin{itemize}
+                \item Есть разработанная теория для решения линейно-квадратичных задач
+                \item Наша задача не такая
+                \item Но мы можем её линеаризовать
+                \item Но нужно знать, вокруг какой траектории это делать
+            \end{itemize}
+        \end{block}
+        Построим референсную траекторию заменой задачи на линейную:
+        $$
+            v = Mu + L\;\Longrightarrow\;
+        $$
+    \end{frame}
+
+    \begin{frame}{Референсная траектория}
+        Метод динамического программирования даёт решение данной задачи:
+        $$
+            Here a formulae be provided
+        $$
+        \begin{block}{Почему она хороша}
+            \begin{itemize}
+                \item Она приводит нас к целевому положению
+                \item Она минимизирует изменение углового ускорения, значит эта траектория возможна
+                \item Но она не имеет никакого отношения к энергии
+            \end{itemize}
+        \end{block}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Будем улучшать}
+        Вдоль референсной траектории $(u,x)$ линеаризуем систему:
+        $$
+            \delta x^{k+1} = A^{k}\delta x^k + B^k \delta u^k,\;\mbox{где}\; A^k = \left.\frac{\partial f}{\partial x}\right|_{(x,u)}
+        $$
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Дифференциальное динамическое программирование}
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    \end{frame}
+\end{document}
