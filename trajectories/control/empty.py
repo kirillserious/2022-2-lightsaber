@@ -15,7 +15,7 @@ def Empty(
     t_start: float,
     t_final: float,
     step: Optional[float]=0.001,
-)->Tuple[List[Vector], List[Vector]]:
+)->List[Vector]:
 
     N = int((t_final - t_start) / step)
 
@@ -25,11 +25,5 @@ def Empty(
         u[i] = Vector([10.0, -10.0, -10.0])
     for i in range(int(N/6*5), N):
         u[i] = Vector([-10.0, 10.0, 10.0])
-
-    print('Initialize empty trajectory')
-    z = [None] * N
-    z[0] = z_start
-    for i in tqdm(range(N-1)):
-        z[i+1] = fk(model, z[i], u[i], step)
     
-    return z, u
+    return u

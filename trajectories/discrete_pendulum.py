@@ -8,7 +8,7 @@
 
 import numpy as np
 
-from common import Model, Vector
+from common import Model, Vector, trajectory
 from common import t_start, t_final, z_start, g, l, m, I, delta_t
 import graphic
 
@@ -18,15 +18,11 @@ import matplotlib.pyplot as plt
 
 # Алгоритм
 model = Model(l, m, I, g)
-N = int(np.ceil((t_final - t_start) / delta_t))
 
-t = np.zeros(N+1)
-z = np.zeros((N+1, 6))
-t[0] = t_start
-z[0] = z_start
-for i in range(N):
-    t[i+1] = t[i] + delta_t
-    z[i+1] = fk(model, z[i], Vector([0.0, 0.0, 0.0]), delta_t)
+step = delta_t
+t = np.arange(t_start, t_final, step)
+u = np.zeros((t.shape[0]-1, 3))
+z = trajectory(model, fk, z_start, u, step)
 
 # Картинка
 fig = plt.figure()

@@ -17,7 +17,7 @@ def Dummy(
     z_final: Vector,
     t_final: float,
     step: Optional[float] = 0.001,
-)->Tuple[Matrix, Matrix]:
+)->Matrix:
     n = len(model.l)
     A_mat = step * np.concatenate(
         (np.concatenate((np.zeros((n,n)), np.eye(n,n)), axis=1), np.zeros((n, 2*n))),
@@ -56,9 +56,7 @@ def Dummy(
         tmp = np.linalg.inv(tmp)
         v[i] = - tmp.dot(B_mat_T).dot(P_mat_list[i]).dot(A_mat).dot(z[i])
         z[i+1] = A_mat.dot(z[i]) + B_mat.dot(v[i])
-        
 
-    print('Translate trajectory')
     for i in tqdm(range(N+1)):
         z[i] = z[i] + z_final
 
@@ -67,4 +65,4 @@ def Dummy(
         for i in tqdm(range(N)):
             v[i] = M(model, z[i]).dot(v[i]) + L(model, z[i])
 
-    return z, v
+    return v

@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+#!/usr/bin/python3
+
 '''
     Трёхсекционный дискретный маятник
     
@@ -74,50 +76,48 @@ t = np.arange(t_start, t_final, delta_t)
 
 model = Model(l, m, I, g)
 
-if False:
-    u_nominal = control.Empty(
-        model, fk, z_start, t_start, t_final, delta_t,
-    )
-    z_nominal = trajectory(
-        model,
-        fk,
-        z_start,
-        u_nominal,
-        delta_t,
-    )
-else:
-    u_nominal = control.Dummy(
-        model,
-        M, L,
-        z_start, t_start,
-        z_final, t_final,
-        delta_t, 
-    )
-    z_nominal = trajectory(
-        model,
-        fk,
-        z_start,
-        u_nominal,
-        delta_t,
-    )
+u_nominal = control.Dummy(model, M, L, z_start, t_start, z_final, t_final, delta_t)
+z_nominal = trajectory(model, fk, z_start, u_nominal, delta_t)
 
 picture(z_nominal, u_nominal, t)
 
-
-
-builder = control.QuadraticIterative(
-    model=model, 
-    fk_z=fk_z, 
-    fk_u=fk_u,
-    z_final=z_final,
-    Q_final=Q_final,
-    Q=Q,
-    R=R
+builder = control.Iterative(
+    model,
+    fk_z,
+    fk_u,
+    lambda model, z, step: (z-z_final).T.dot(Q_final).dot(z-z_final),
+    lambda model, z, step: Q_final.dot(z-z_final),
+    lambda model, z, step: Q_final,
+    lambda model, z, step: z.T.dot(Q).dot(z),
+    lambda model, z, step: Q.dot(z),
+    lambda model, z, step: Q,
+    lambda model, u, step: u.T.dot(R).dot(u),
+    lambda model, u, step: R.dot(u),
+    lambda model, u, step: R,
+    0.001,
 )
 
 while True:
     u = builder.improve(z_nominal, u_nominal)
-    z = trajectory(model, fk, z_start, u, delta_t)
+    z = trajectory(model, fk, z_start, u, 0.001)
     picture(z, u, t)
     z_nominal = z
     u_nominal = u
+
+#builder = control.QuadraticIterative(
+#    model=model, 
+#    fk_z=fk_z, 
+#    fk_u=fk_u,
+#    z_final=z_final,
+#    Q_final=Q_final,
+#    Q=Q,
+#    R=R
+#)
+
+
+
+#while True:
+#    z, u = builder.improve(z_nominal, u_nominal)
+#    picture(z, u, t)
+#    z_nominal = z
+#    u_nominal = u

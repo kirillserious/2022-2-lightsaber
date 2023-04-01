@@ -20,7 +20,7 @@ class QuadraticIterative:
     R: Matrix
     step:Optional[float]=0.001
     
-    def improve(self, z_nominal:Union[Matrix, List[Vector]], u_nominal:Matrix)->Tuple[Matrix, Matrix]:
+    def improve(self, z_nominal:Union[Matrix, List[Vector]], u_nominal:Matrix)->Matrix:
         model = self.model
         fk_z = self.fk_z
         fk_u = self.fk_u
@@ -84,5 +84,5 @@ class QuadraticIterative:
             delta_zi = np.matmul(Ai, delta_zi) + np.matmul(Bi, delta_ui)
             z[i+1] = z_nominal[i+1] + delta_zi
         
-        return z, u
+        return u
 
