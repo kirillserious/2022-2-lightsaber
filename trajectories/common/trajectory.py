@@ -23,3 +23,17 @@ def trajectory(
     for k in tqdm(range(N-1)):
         z[k+1] = f(model, z[k], u[k], step)
     return z
+
+def end_effector(
+    z: Vector,
+    l: Union[List[float], Vector],
+)->Vector:
+    if isinstance(l, list):
+        N = len(l)
+    else:
+        N = l.shape[0]
+    
+    return Vector([
+        sum([l[i]*np.cos(z[i]) for i in range(N)]),
+        sum([l[i]*np.sin(z[i]) for i in range(N)]),
+    ])

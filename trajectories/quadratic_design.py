@@ -17,7 +17,7 @@
 
 '''
 from typing import List
-from common import Vector, Matrix, Model, trajectory
+from common import Vector, Matrix, Model, trajectory, end_effector
 from common import t_start, z_start, t_final, l, m, I, g, delta_t
 import graphic
 import control
@@ -74,7 +74,7 @@ t = np.arange(t_start, t_final, delta_t)
 
 model = Model(l, m, I, g)
 
-if False:
+if True:
     u_nominal = control.Empty(
         model, fk, z_start, t_start, t_final, delta_t,
     )
@@ -114,6 +114,29 @@ builder = control.QuadraticIterative(
     Q=Q,
     R=R
 )
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+graphic.end_effector_lines(ax, l, [z_nominal], t_start, 0.001, color='C1')
+
+zs = []
+for i in range(10):
+    print('%d iteration started' % (i+1))
+    u = builder.improve(z_nominal, u_nominal)
+    z = trajectory(model, fk, z_start, u, 0.001)
+    zs = zs + [z]
+    #costs = costs + [cost.calculate(z, u)]
+    z_nominal = z
+    u_nominal = u
+
+graphic.end_effector_lines(ax, l, zs, t_start, 0.001)
+target = end_effector(z_final, l)
+ax.plot3D([t_final], [target[0]], [target[1]], 'o-', lw=2, c='C3')
+
+#bx = fig.add_subplot(122)
+#bx.plot(list(range(len(costs))), costs)
+plt.show()
+exit()
 
 while True:
     u = builder.improve(z_nominal, u_nominal)

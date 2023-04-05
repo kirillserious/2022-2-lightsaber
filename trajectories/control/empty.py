@@ -21,9 +21,4 @@ def Empty(
 
     print('Initialize empty control')
     u = [Vector([0.0, 0.0, 0.0]) for i in tqdm(range(N))]
-    for i in range(int(N/6*4), int(N/6*5)):
-        u[i] = Vector([10.0, -10.0, -10.0])
-    for i in range(int(N/6*5), N):
-        u[i] = Vector([-10.0, 10.0, 10.0])
-    
     return u

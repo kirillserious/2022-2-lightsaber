@@ -28,6 +28,39 @@ def pendulum_line(
     return x, y
 
 
+def add_pendulum_lines(
+    axes,
+    l: Union[List[float], Vector],
+    z: Union[List[float], Vector],
+    lines=15,
+) -> None:
+    if isinstance(l, list):
+        l_len = len(l)
+    else:
+        l_len, = l.shape
+    
+    l_len = sum([l[i] for i in range(l_len)])
+    axes.set_xlim(-l_len-1, l_len+1)
+    axes.set_ylim(-l_len-1, l_len+1)
+
+
+    axes.set_aspect('equal', adjustable='box')
+    axes.grid(True)
+
+    if isinstance(z, list):
+        N = len(z)
+    else:
+        N = z.shape[0]
+    
+    step = int(N / lines)
+    for i in range(lines):
+        index = i*step
+        x, y = pendulum_line(l, z[index])
+        axes.plot(x, y, 'o-', c='C0' ,alpha=1/lines*(i+1))
+    x, y = pendulum_line(l, z[N-1])
+    axes.plot(x, y, 'o-', c='C0')
+
+
 def time_range(
     t:Union[List[float], Vector],
     interval: int, #ms
