@@ -247,7 +247,7 @@
 
         Решим для системы \eqref{eq:linear} задачу минимизации интегрально-квадратичного функционала:
         $$
-            J^{ref} = \langle (x-x^{final}), T^{N+1}(x-x^{final}) \rangle + \sum_{k=1}^{N} \langle v^k, Nv^k \rangle \longrightarrow \mathrm{min}
+            J^{ref} = \langle (x-x^{final}), T^{final}(x-x^{final}) \rangle + \sum_{k=1}^{N} \langle v^k, Tv^k \rangle \longrightarrow \mathrm{min}
         $$
 
         Получим референсное управление $u$ из соотношения
@@ -259,14 +259,14 @@
     \begin{frame}{Референсная траектория}
         Метод динамического программирования даёт решение данной задачи:
         $$
-            v^k_* = -[N^k + B_{ref}^{\mathrm{T}}P^kB_{ref}]^{-1}P^kB_{ref}A_{ref} x,
+            v^k_* = -[T + B_{ref}^{\mathrm{T}}P^kB_{ref}]^{-1}P^kB_{ref}A_{ref} x,
         $$
         где матрица $P^k$ может быть посчитана в обратном времени как решение уравнения Риккати:
         $$
             \begin{aligned}
-                &P^{k-1} = A_{ref}^{\mathrm{T}} P^{k} A_{ref} - A_{ref}^{\mathrm{T}}P^kB_{ref}[N + B_{ref}^\mathrm{T}P^kB_{ref}]^{-1}B_{ref}^{\mathrm{T}}P^{k}A_{ref}^{k}
+                &P^{k-1} = A_{ref}^{\mathrm{T}} P^{k} A_{ref} - A_{ref}^{\mathrm{T}}P^kB_{ref}[T + B_{ref}^\mathrm{T}P^kB_{ref}]^{-1}B_{ref}^{\mathrm{T}}P^{k}A_{ref}
                 \\
-                &P^{N+1} = T
+                &P^{N+1} = T^{final}
             \end{aligned}
         $$
         \begin{block}{Полученное управление}
