@@ -1,0 +1,231 @@
+\section{Итеративный метод cинтеза оптимального управления}
+
+\subsection{Общая идея метода}
+
+Есть хорошо разработанная теория для решения интегральных линейно-квадратичных задач.
+Большинство работ, посвященных управлению нелинейными системами, предлагают линеаризацию задачи с потерей физического смысла управления (давайте минимизировать то, что мы умеем минимизировать).
+Поэтому далее предложен метод, который решает эту проблему.
+Общая идея метода схожа с идеей метод дифференциального динамического программирования.
+
+Метод итеративный.
+\begin{enumerate}
+    \item Предположим, что на $k$-ой итерации мы имеем некоторое \textit{референсное} управление $\bar{u}^k$ и соответствующую ему референсную траекторию $\bar{x}^k$.
+    \item Линеаризуем систему и функционал качества в окрестности референсной траектории и построим поправку $\delta u$ для референсного управления $\bar{u}^{k+1} = \bar{u}^k + \delta u$.
+    \item Используем поправленное управление в качестве референсного на следующей итерации алгоритма.
+\end{enumerate}
+Критерий остановки алгоритма, если $|J(u^k) - J(u^{k-1})| < \varepsilon$ для некоторого заданного наперед $\varepsilon > 0$.
+
+
+\subsection{Синтез управления}
+Допустим мы имеем некоторое референсное управление~$\bar u$ и соответствующую ему референсную траекторию~$\bar x$.
+Введем обозначения:
+$$
+    f_x^k = \left.\frac{\partial f}{\partial x}\right|_{(\bar x^k, \bar u^k)},
+    \quad
+    f_u^k = \left.\frac{\partial f}{\partial u}\right|_{(\bar x^k, \bar u^k)},
+$$
+
+$$
+    q^k = q(\bar x^k),
+    \quad
+    q_x^k = \left.\frac{\partial q}{\partial x}\right|_{\bar x^k},
+    \quad
+    q_{xx}^k = \left.\frac{\partial^2 q}{\partial x^2}\right|_{\bar x^k},
+$$
+
+$$
+    r^k = r(\bar u^k),
+    \quad
+    r_x^k = \left.\frac{\partial r}{\partial u}\right|_{\bar u^k},
+    \quad
+    r_{xx}^k = \left.\frac{\partial^2 r}{\partial u^2}\right|_{\bar u^k}.
+$$
+
+{\color{red} Тут и немного далее ошибка: должно быть просто $\delta x$, а не $\tilde x$. В программе все верно.}
+
+Тогда, линеаризуя вдоль референсной траектории задачу Коши~\eqref{eq:discrete-system} и строя квадратичную аппроксимацию вдоль той же траектории функционала качества~\eqref{eq:discrete-cost}, получаем следующую задачу:
+\begin{equation}\label{eq:ref-system}
+    \left\{\begin{aligned}
+        &\delta x^{k+1} = f_x^k \delta x + f_u^k \delta u \\
+        &\delta x^0 = 0.
+    \end{aligned}\right.
+\end{equation}
+\begin{multline}\label{eq:ref-cost}
+    J = q^{N+1} + q_x^{N+1}\tilde x^{N+1} + \frac{1}{2}\langle \tilde x^{N+1}, q_{xx}^{N+1}\tilde x^{N+1} \rangle
+    + \\ +
+    \sum_{k=1}^{N}\left[ q^{k} + q_x^{k}\tilde x^{k} + \frac{1}{2}\langle \tilde x^{k}, q_{xx}^{k}\tilde x^{k} \rangle \right]
+    + \\ +
+    \sum_{k=1}^{N}\left[ r^{k} + r_u^{k}\tilde u^{k} + \frac{1}{2}\langle \tilde u^{k}, r_{uu}^{k}\tilde u^{k} \rangle \right],
+\end{multline}
+где $\tilde x^k = \bar x^k + \delta x^k$, $\tilde u^k = \bar u^k + \delta u^k$.
+
+Построим гамильтониан для задачи~\eqref{eq:ref-system}-\eqref{eq:ref-cost}:
+\begin{multline}
+    H_k = q^{k} + q_x^{k}\tilde x^{k} + \frac{1}{2}\langle \tilde x^{k}, q_{xx}^{k}\tilde x^{k} \rangle
+    +\\+
+    r^{k} + r_u^{k}\tilde u^{k} + \frac{1}{2}\langle \tilde u^{k}, r_{uu}^{k}\tilde u^{k} \rangle
+    +\\+
+    (\lambda^{k+1})^{\T} (f_x^k \delta x^k + f_u^k \delta u^k),
+\end{multline}
+где $\lambda^{k+1}$~--- мультипликаторы Лагранжа.
+
+Оптимальное управление $\delta u$ должно удовлетворять необходимому условию $\frac{\partial H_k}{\partial u^k} = 0$:
+\begin{equation*}
+    r_u^k + r_{uu}^k(\bar u^k + \delta u^k) + (f_u^k)^{\T}\lambda^{k+1} = 0.
+\end{equation*}
+что дает следующее выражение для поправки:
+\begin{equation}\label{eq:delta-u}
+    \delta u^k = - (r_{uu}^k)^{-1}[(f_u^k)^{\T}\lambda^{k+1} + r_u^k] - \bar u^k.
+\end{equation}
+При этом имеет силу сопряженная задача:
+\begin{equation}\label{eq:lambda-system}
+    \left\{\begin{aligned}
+        \lambda^k = (f_x^k)^{\T} \lambda^{k+1} + q_x^k + q_{xx}^k(\bar x^k + \delta x^k)
+        \\
+        \lambda^{N+1} = q_x^{N+1} + q_{xx}^{N+1}(\bar x^{N+1} + \delta x^{N+1})
+        .
+    \end{aligned}\right.
+\end{equation}
+
+Из \eqref{eq:delta-u} и \eqref{eq:lambda-system} вытекает
+\begin{equation}
+    \left[\begin{aligned}
+        \delta x^{k+1}
+        \\
+        \lambda^{k}
+    \end{aligned}\right]
+    =
+    \underbrace{\left[\begin{aligned}
+        & f_x^k & -f^k_u (r^k_{uu})^{-1} (f^k_u)^{\T} &
+        \\
+        & q^k_{xx} & (f^k_x)^{\T} &
+    \end{aligned}\right]}_{\Phi^k}
+    \left[\begin{aligned}
+        \delta x^k
+        \\
+        \lambda^{k+1}
+    \end{aligned}\right]
+    +
+    \underbrace{\left[\begin{aligned}
+        -f^k_u (r^k_{uu})^{-1} r^k_u
+        \\
+        q^k_x
+    \end{aligned}\right]}_{\Gamma^k}.
+\end{equation}
+
+Предположим, что мультипликаторы $\lambda$ имеют следующую афинную форму относительно фазовой переменной $\delta x$
+$$
+    \lambda^{k} = S_k \delta x^k + v^k
+$$
+
+Теперь мы можем доказать следующую теорему.
+
+\begin{theorem}
+    Оптимальная поправка $\delta u$ для задачи~\eqref{eq:ref-system}-\eqref{eq:ref-cost} вычисляется как
+    \begin{equation}
+        \delta u^k = - (r^k_{uu} + (f^k_u)^{\T} S_{k+1} f^k_u)^{-1} ((f^k_u)^{\T} S_{k+1} f^k_u \delta x + v^{k+1} + r^k_u),
+    \end{equation}
+    где $S_k$ и $v^{k}$ высчитываются в обратном времени как
+    \begin{equation}
+        \begin{aligned}
+            S_k &= \Phi^k_{21} + \Phi^k_{22} S_{k+1} (I - \Phi^k_{12}S_{k+1})^{-1} \Phi^k_{11},
+            \\
+            v^k &= \Phi^k_{22} S_{k+1} ( I - \Phi^k_{12} S_{k+1})^{-1} (\Phi^k_{12} v^{k+1} + \Gamma^k_1) + \Phi^k_{22} v^{k+1} + \Gamma^k_2
+        \end{aligned}
+    \end{equation}
+    с граничными условиями
+    \begin{equation}
+        \begin{aligned}
+            S_{N+1} &= q^{N+1}_{xx},
+            \\
+            v^{N+1} &= q^{N+1}_{x}.
+        \end{aligned}
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    
+    Тут будет много формул, которые будут следовать из предыдущих формул, и при этом докажут верхнее утверждение.
+
+\end{proof}
+\begin{remark}
+    Данная теорема не учитывает возможные ограничения на управление, которые естественным образом возникают для данной задачи.
+    Далее мы будем считать, что задано некоторое поточечное ограницение на управление $u^k \in \mathcal{U}^k$.
+    В этом случае, мы будем считать домножать поправку на некоторую величину $\eta$, такую что $u^k + \eta \delta u^k \in \partial \mathcal{U}^k$.
+\end{remark}
+
+{\color{red} Добавить замечание, почему только $r_{uu}$ должна быть $> 0$ --- типа лемма об обращении матриц.}
+
+{\color{red} Не забыть, что так как метод итеративный, нет надобности рассматривать большую систему с уравнение наблюдаемости, так как это предполагало бы, что каждая итерация алгоритма производится не на компьютере, где с наблюдаемостью все хорошо, а на настоящем человеке.}
+
+
+\subsection{Построение начальной референсной траектории}
+
+Очевидно, что скорость что можно сильно увеличить скорость сходимости предложенного метода выбором некоторой начальной референсной траектории, близкой к оптимальной.
+При этом изначальное референсное управление должно строиться \textit{быстро}.
+В данном разделе предложено построение такой траектории.
+
+Все еще мы умеем хорошо строить управление для интегральных линейно-квадратичных задач.
+Поэтому приведем систему \eqref{eq:discrete-system} к линейной заменой управления:
+\begin{equation}
+    \tilde u = M^{-1}(x_1) (\tau - L(x_1, x_2)).
+\end{equation}
+Тогда в фазовом пространстве $\tilde x = [x_1\; x_2] \in \mathbb{R}^{6}$ задача Коши примет вид
+\begin{equation}\label{eq:reference-system}
+    \left\{\begin{aligned}
+        & \tilde x^{k+1} = \underbrace{\mathrm{diag}\{I\;O\}}_{A_{\mathrm{ref}}} \tilde x^{k} + \underbrace{\mathrm{diag}\{O\;I\}}_{B_{\mathrm{ref}}} \tilde u^{k}
+        \\
+        & \tilde x^{0} = x^{0}.
+    \end{aligned}\right.
+\end{equation}
+
+Для задачи Коши~\eqref{eq:reference-system} поставим задачу достижения целевого состояния $x^* \in \mathbb{R}^{6}$:
+\begin{equation}
+    J_{\mathrm{ref}} = \|\tilde x^{N+1} - x^*\|^2 + \sum_{k=1}^{N} \|\tilde u^k \|^2 \longrightarrow \mathrm{min}.
+\end{equation}
+
+\begin{remark}
+    Для того, чтобы использовать данную траекторию, как референсную для задачи \eqref{eq:discrete-system}-\eqref{eq:discrete-cost}, необходимо, чтобы конечное состояние $x^*$ минимизировало терминальную часть функционала качества исходной задачи~\eqref{eq:discrete-cost}.
+\end{remark}
+
+\begin{remark}
+    С физической точки зрения решение данной задачи минимизирует угловые ускорения сочленений руки.
+    Таким образом результатирующая траектория будет самой плавной из возможных.
+    Кажется естественным, чтобы такая траектория входило в множество допустимых управлений для исходной задачи.
+\end{remark}
+
+\begin{remark}
+    Решив эту задачу, мы легко можем получить соответствующее управление для исходной задачи по формуле
+    \begin{equation}
+        \tau^k = M(x_1^k)\tilde u^k + L(x_1^k, x_2^k) \Longrightarrow u^k = \frac{\tau^{k+1} - \tau^{k}}{\Delta t}.
+    \end{equation}    
+\end{remark}
+
+\begin{theorem}
+    Оптимальное управление для задачи (ссылка) задаётся
+    \begin{equation}
+        \tilde u^k* = -[I + B_{\mathrm{ref}}^{\T}P_kB_{\mathrm{ref}}]B_{\mathrm{ref}}^{\T} P_k A_{\mathrm{ref}} \tilde x,
+    \end{equation}
+    где матрицы $P_k = P_k^{\T} > 0$ можно найти в обратном времени из соотношений
+    \begin{equation}
+        \begin{aligned}
+            P_{k-1} &= A_{\mathrm{ref}}^{\T} P_k A_{\mathrm{ref}} - A_{\mathrm{ref}}^{\T} P_k B_{\mathrm{ref}}(I + B_{\mathrm{ref}}^{\T} P_k A_{\mathrm{ref}}) P_k A_{\mathrm{ref}},
+            \\
+            P_{N+1} &= I.
+        \end{aligned}
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+
+    Пользуемся методом динамического программирования. Строим функцию цены. Предполагаем что-то, получаем результат. Готово.
+
+\end{proof}
+
+\subsection{Применение метода для классических задач}
+
+Тут будут примеры с картинками, как данный метод применяется для задач:
+\begin{itemize}
+    \item Перехода в целевое состояние
+    \item Перехода в целевое положение схвата
+    \item Обход препятствия
+\end{itemize}

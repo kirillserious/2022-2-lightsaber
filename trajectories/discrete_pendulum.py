@@ -5,7 +5,7 @@
 
     \dot z = f(z, u) => z^{k+1} = z^{k} + \Delta t * f(z^{k}, u^{k})
 '''
-
+import os
 import numpy as np
 
 from common import Model, Vector, trajectory, end_effector
@@ -34,21 +34,32 @@ z = trajectory(model, fk, z_start, u, step)
 # Картинка
 fig = plt.figure()
 ax = fig.add_subplot(111)
-#ani = graphic.PendulumAnimation(fig, ax, l, z, t)
-graphic.add_pendulum_lines(ax, l, z, lines=10)
 
-end_effectors = [[], []]
-for i in range(len(z)):
-    ef = end_effector(z[i], l)
-    end_effectors[0] += [ef[0]]
-    end_effectors[1] += [ef[1]]
+graph = os.getenv('GRAPH', default='animation')
+if graph == 'animation':
+    ani = graphic.PendulumAnimation(fig, ax, l, z, t)
+    plt.show()
+elif graph == 'pendulum':
+    graphic.add_pendulum_lines(ax, l, z, lines=10)
 
-ax.plot(end_effectors[0], end_effectors[1], c='C1')
-ax.legend(handles=[
-    Line2D([0], [0], color='C0', label='Сочленения руки'),
-    Line2D([0], [0], color='C1', label='Траектория схвата')
-])
-ax.set_xlabel('$x$')
-ax.set_ylabel('$y$')
-#plt.show()
-plt.savefig('../report/conference/discrete_pendulum.pdf', format='pdf', dpi=1200)
+    end_effectors = [[], []]
+    for i in range(len(z)):
+        ef = end_effector(z[i], l)
+        end_effectors[0] += [ef[0]]
+        end_effectors[1] += [ef[1]]
+
+    ax.plot(end_effectors[0], end_effectors[1], c='C1')
+    ax.legend(handles=[
+        Line2D([0], [0], color='C0', label='Сочленения руки'),
+        Line2D([0], [0], color='C1', label='Траектория схвата')
+    ])
+    ax.set_xlabel('$x$')
+    ax.set_ylabel('$y$')
+
+    output = os.getenv('OUTPUT')
+    if output is None:
+        plt.show()
+    else:
+        plt.savefig(output, format='pdf', dpi=1200)
+else:
+    raise Exception('Unexpected graph kind')

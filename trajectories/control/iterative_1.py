@@ -1,53 +1,28 @@
-from dataclasses import dataclass
 from typing import Optional, Callable, Tuple, Union, List
-
+from cost import Cost
 import numpy as np
 from tqdm import tqdm
 
 from common import Model, Vector, Matrix
 
 # fcn(model, zk, uk, step)
-MatrixMultiFcn = Callable[[Model, Vector, Vector, float], Matrix]
+MatrixMultiFcn = Callable[[Vector, Vector, float], Matrix]
 
 # fcn(model, zk or uk, step)
 ScalarFcn = Callable[[Model, Vector, float], float]
 VectorFcn = Callable[[Model, Vector, float], Vector]
 MatrixFcn = Callable[[Model, Vector, float], Matrix]
 
-@dataclass
-class Iterative:
-    model: Model
-    f_z: MatrixMultiFcn
-    f_u: MatrixMultiFcn
-
-    # Tailor decomposition of integral x constraints
-    qf: ScalarFcn
-    qf_z: VectorFcn
-    qf_zz: MatrixFcn
-    
-    q: ScalarFcn
-    q_z: VectorFcn
-    q_zz: MatrixFcn
-
-    r: ScalarFcn
-    r_u: VectorFcn
-    r_uu: MatrixFcn
-
-    step:Optional[float]=0.001
+class Iterative1:
+    def __init__(self, f_z: MatrixMultiFcn, f_u: MatrixMultiFcn, qf: Cost, q: Cost, r: Cost, step: float):
+        self.f_z = f_z
+        self.f_u = f_u
+        self.qf = qf
+        self.q = q
+        self.r = r
+        self.step = step
 
     def improve(self, z_nominal:Union[Matrix, List[Vector]], u_nominal:Matrix)->Tuple[Matrix, Matrix]:
-        model = self.model
-        f_z = self.f_z
-        f_u = self.f_u
-        qf = self.qf
-        qf_z = self.qf_z
-        qf_zz = self.qf_zz
-        q = self.q
-        q_z = self.q_z
-        q_zz = self.q_zz
-        r = self.r
-        r_u = self.r_u
-        r_uu = self.r_uu
         step = self.step
 
         if isinstance(z_nominal, list):
@@ -60,8 +35,8 @@ class Iterative:
         
         print('Start S,v backward computation')
         #print(qf(model, z_nominal[N-1], step))
-        S[N-1] = qf_zz(model, z_nominal[N-1], step)
-        v[N-1] = qf_z(model, z_nominal[N-1], step)
+        S[N-1] = self.qf.dd_cost(z_nominal[N-1], step)
+        v[N-1] = self.qf.d_cost(z_nominal[N-1], step)
         #print(S[N-1])
         #print(v[N-1])
         #exit()
@@ -71,14 +46,14 @@ class Iterative:
             uk_nominal = u_nominal[k]
             zk_nominal = z_nominal[k]
 
-            fk_z = f_z(model, zk_nominal, uk_nominal, step)
-            fk_u = f_u(model, zk_nominal, uk_nominal, step)
-            qk = q(model, zk_nominal, step)
-            qk_z = q_z(model, zk_nominal, step)
-            qk_zz = q_zz(model, zk_nominal, step)
-            rk = r(model, uk_nominal, step)
-            rk_u = r_u(model, uk_nominal, step)
-            rk_uu = r_uu(model, uk_nominal, step)
+            fk_z = self.f_z(zk_nominal, uk_nominal, step)
+            fk_u = self.f_u(zk_nominal, uk_nominal, step)
+            qk = self.q.cost(zk_nominal, step)
+            qk_z = self.q.d_cost(zk_nominal, step)
+            qk_zz = self.q.dd_cost(zk_nominal, step)
+            rk = self.r.cost(uk_nominal, step)
+            rk_u = self.r.d_cost(uk_nominal, step)
+            rk_uu = self.r.dd_cost(uk_nominal, step)
             rk_uu_inv = np.linalg.inv(rk_uu)
             
             A_11 = fk_z
@@ -105,10 +80,10 @@ class Iterative:
             uk_nominal = u_nominal[k]
             zk_nominal = z_nominal[k]
 
-            fk_z = f_z(model, zk_nominal, uk_nominal, step)
-            fk_u = f_u(model, zk_nominal, uk_nominal, step)
-            rk_u = r_u(model, uk_nominal, step)
-            rk_uu = r_uu(model, uk_nominal, step)
+            fk_z = self.f_z(zk_nominal, uk_nominal, step)
+            fk_u = self.f_u(zk_nominal, uk_nominal, step)
+            rk_u = self.r.d_cost(uk_nominal, step)
+            rk_uu = self.r.dd_cost(uk_nominal, step)
             rk_uu_inv = np.linalg.inv(rk_uu)
 
             #delta_u = -rk_uu_inv.dot(rk_u + fk_u.T.dot(S[k+1].dot(delta_z) + v[k+1]))
