@@ -1,5 +1,18 @@
-\documentclass[16pt]{beamer}
+\documentclass[compress, 16pt]{beamer}
 
 \usepackage[utf8]{inputenc}
 \usepackage[main=russian, english]{babel}
 \usetheme{Warsaw}
+% Добавляем в панель навигации номер страницы
+\setbeamertemplate{navigation symbols}{
+        \insertslidenavigationsymbol
+        \insertframenavigationsymbol
+        \insertsubsectionnavigationsymbol
+        \insertsectionnavigationsymbol
+        \insertdocnavigationsymbol
+        \insertbackfindforwardnavigationsymbol
+        \hspace{1em}
+        \usebeamerfont{footline}
+        \insertframenumber /\inserttotalframenumber
+        %
+}

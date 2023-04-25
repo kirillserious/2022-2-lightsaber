@@ -1,4 +1,5 @@
 import sympy
+from sympy.printing.numpy import NumPyPrinter
 
 # Параметры программы
 links_count = 3
@@ -31,7 +32,7 @@ cost = sum([
     (q[i] - z_final[i])**2  
     for i in range(links_count* 2)
 ])
-#print(cost)
+#print(NumPyPrinter().doprint(cost))
 
 cost = sympy.Matrix([[cost]])
 q_vec = [

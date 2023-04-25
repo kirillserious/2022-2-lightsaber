@@ -41,8 +41,6 @@ $$
     r_{xx}^k = \left.\frac{\partial^2 r}{\partial u^2}\right|_{\bar u^k}.
 $$
 
-{\color{red} Тут и немного далее ошибка: должно быть просто $\delta x$, а не $\tilde x$. В программе все верно.}
-
 Тогда, линеаризуя вдоль референсной траектории задачу Коши~\eqref{eq:discrete-system} и строя квадратичную аппроксимацию вдоль той же траектории функционала качества~\eqref{eq:discrete-cost}, получаем следующую задачу:
 \begin{equation}\label{eq:ref-system}
     \left\{\begin{aligned}
@@ -65,22 +63,22 @@ $$
     +\\+
     r^{k} + r_u^{k}\tilde u^{k} + \frac{1}{2}\langle \tilde u^{k}, r_{uu}^{k}\tilde u^{k} \rangle
     +\\+
-    (\lambda^{k+1})^{\T} (f_x^k \delta x^k + f_u^k \delta u^k),
+    (\lambda^{k+1})\T (f_x^k \delta x^k + f_u^k \delta u^k),
 \end{multline}
 где $\lambda^{k+1}$~--- мультипликаторы Лагранжа.
 
 Оптимальное управление $\delta u$ должно удовлетворять необходимому условию $\frac{\partial H_k}{\partial u^k} = 0$:
 \begin{equation*}
-    r_u^k + r_{uu}^k(\bar u^k + \delta u^k) + (f_u^k)^{\T}\lambda^{k+1} = 0.
+    r_u^k + r_{uu}^k(\bar u^k + \delta u^k) + (f_u^k)\T\lambda^{k+1} = 0.
 \end{equation*}
 что дает следующее выражение для поправки:
 \begin{equation}\label{eq:delta-u}
-    \delta u^k = - (r_{uu}^k)^{-1}[(f_u^k)^{\T}\lambda^{k+1} + r_u^k] - \bar u^k.
+    \delta u^k = - (r_{uu}^k)^{-1}[(f_u^k)\T\lambda^{k+1} + r_u^k] - \bar u^k.
 \end{equation}
 При этом имеет силу сопряженная задача:
 \begin{equation}\label{eq:lambda-system}
     \left\{\begin{aligned}
-        \lambda^k = (f_x^k)^{\T} \lambda^{k+1} + q_x^k + q_{xx}^k(\bar x^k + \delta x^k)
+        \lambda^k = (f_x^k)\T \lambda^{k+1} + q_x^k + q_{xx}^k(\bar x^k + \delta x^k)
         \\
         \lambda^{N+1} = q_x^{N+1} + q_{xx}^{N+1}(\bar x^{N+1} + \delta x^{N+1})
         .
@@ -96,9 +94,9 @@ $$
     \end{aligned}\right]
     =
     \underbrace{\left[\begin{aligned}
-        & f_x^k & -f^k_u (r^k_{uu})^{-1} (f^k_u)^{\T} &
+        & f_x^k & -f^k_u (r^k_{uu})^{-1} (f^k_u)\T &
         \\
-        & q^k_{xx} & (f^k_x)^{\T} &
+        & q^k_{xx} & (f^k_x)\T &
     \end{aligned}\right]}_{\Phi^k}
     \left[\begin{aligned}
         \delta x^k
@@ -123,7 +121,7 @@ $$
 \begin{theorem}
     Оптимальная поправка $\delta u$ для задачи~\eqref{eq:ref-system}-\eqref{eq:ref-cost} вычисляется как
     \begin{equation}
-        \delta u^k = - (r^k_{uu} + (f^k_u)^{\T} S_{k+1} f^k_u)^{-1} ((f^k_u)^{\T} S_{k+1} f^k_u \delta x + v^{k+1} + r^k_u),
+        \delta u^k = - (r^k_{uu} + (f^k_u)\T S_{k+1} f^k_u)^{-1} ((f^k_u)\T S_{k+1} f^k_u \delta x + v^{k+1} + r^k_u),
     \end{equation}
     где $S_k$ и $v^{k}$ высчитываются в обратном времени как
     \begin{equation}
@@ -138,7 +136,7 @@ $$
         \begin{aligned}
             S_{N+1} &= q^{N+1}_{xx},
             \\
-            v^{N+1} &= q^{N+1}_{x}.
+            v^{N+1} &= q^{N+1}_{x} + q^{N+1}_{xx}\bar x^{N+1}.
         \end{aligned}
     \end{equation}
 \end{theorem}
@@ -203,12 +201,12 @@ $$
 \begin{theorem}
     Оптимальное управление для задачи (ссылка) задаётся
     \begin{equation}
-        \tilde u^k* = -[I + B_{\mathrm{ref}}^{\T}P_kB_{\mathrm{ref}}]B_{\mathrm{ref}}^{\T} P_k A_{\mathrm{ref}} \tilde x,
+        \tilde u^k* = -[I + B_{\mathrm{ref}}\T P_k B_{\mathrm{ref}}]B_{\mathrm{ref}}\T P_k A_{\mathrm{ref}} \tilde x,
     \end{equation}
-    где матрицы $P_k = P_k^{\T} > 0$ можно найти в обратном времени из соотношений
+    где матрицы $P_k = P_k\T > 0$ можно найти в обратном времени из соотношений
     \begin{equation}
         \begin{aligned}
-            P_{k-1} &= A_{\mathrm{ref}}^{\T} P_k A_{\mathrm{ref}} - A_{\mathrm{ref}}^{\T} P_k B_{\mathrm{ref}}(I + B_{\mathrm{ref}}^{\T} P_k A_{\mathrm{ref}}) P_k A_{\mathrm{ref}},
+            P_{k-1} &= A_{\mathrm{ref}}\T P_k A_{\mathrm{ref}} - A_{\mathrm{ref}}\T P_k B_{\mathrm{ref}}(I + B_{\mathrm{ref}}\T P_k A_{\mathrm{ref}}) P_k A_{\mathrm{ref}},
             \\
             P_{N+1} &= I.
         \end{aligned}
