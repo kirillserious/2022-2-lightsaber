@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 # Входные данные
-l = [1.2, 1.2, 0.6]
+l = [0.7, 0.7, 1.6]
 t_start = 0.0
 t_final = 1.0
 z_start = Vector([0, 0, 0, 0, 0, 0])
@@ -60,6 +60,6 @@ elif graph == 'pendulum':
     if output is None:
         plt.show()
     else:
-        plt.savefig(output, format='pdf', dpi=1200)
+        plt.savefig(output, format='pdf', bbox_inches='tight', dpi=1200)
 else:
     raise Exception('Unexpected graph kind')

@@ -1,0 +1,71 @@
+\documentclass[../../doc.tex]{subfiles}
+\graphicspath{{\subfix{../../img}}}
+\begin{document}
+    \subsection{Непрерывная постановка задачи}
+    
+    Поставим задачу целевого управления для модели, построенной в Разделе~1.
+    Для этого рассмотрим расширенное фазовое пространство с состоянием
+    \begin{equation*}
+        x = [\theta\;\dot\theta\;\tau]\T \in \mathbb{R}^9.
+    \end{equation*}
+    Тогда уравнение динамики системы~\eqref{eq:dynamic} можно переписать в виде системы однородных дифференциальных уравнений
+    \begin{equation}\label{eq:kinematic}
+        \dot x = A(x) + Bu,
+    \end{equation}
+    где 
+    $$
+        A(x) = \begin{bmatrix}
+            x_2 \\
+            M^{-1}(x_1)(x_3 - L(x_1, x_2)) \\
+            O
+        \end{bmatrix}
+        ,\quad
+        B = \begin{bmatrix}
+            O \\
+            O \\
+            I
+        \end{bmatrix}.
+    $$
+    Считаем, что для данной системы поставлена задача~Коши, то есть нам известно начальное состояние системы
+    \begin{equation}\label{eq:cauchy}
+        x(t_0) = x^{\textnormal{start}}.
+    \end{equation}
+
+    \begin{remark}
+        Отметим, что для выполнения достаточных условий существования и единственности решения Каратеодори для задачи Коши~\eqref{eq:kinematic}-\eqref{eq:cauchy} управление~$u$ достаточно брать из класса измеримых на рассматриваемом отрезке $t_{\textnormal{start}}\leqslant t \leqslant t_{\textnormal{final}}$ функций.
+    \end{remark}
+
+    Для задачи Коши~\eqref{eq:kinematic}-\eqref{eq:cauchy} поставим задачу поиска управления $u \in U[t_{\textnormal{start}},t_{\textnormal{final}}]$, минимизирующего функционал вида:
+    \begin{equation}\label{eq:continuos-cost}
+        J = q^{\textnormal{final}}(x(t_{\textnormal{final}})) + w_1 \!\! \uint\limits_{t_{\textnormal{start}}}^{t_{\textnormal{final}}} \!\! q(x(t))\,dt + w_2 \!\! \uint\limits_{t_{\textnormal{start}}}^{t_{\textnormal{final}}} \!\! r(u(t))\,dt,
+    \end{equation}
+    где $q^{\textnormal{final}}$, $q$ отвечают за терминальное и фазовые ограничения соответственно и выбираются в зависимости от конкретной постановки задачи, а $r$ отвечает за энергетические затраты и в соответствии с \eqref{eq:energy-cost} равна:
+    $$
+        r(u) = \|u\|^2,
+    $$
+    а $w_1$, $w_2$~--- веса соответствующих критериев для данной многокритериальной задачи.
+
+    Для дальнейших рассуждений потребуем, чтобы функции $q^{\textnormal{final}}$, $q$ были дважды непрерывно дифференцируемыми.
+    Полученные из модели функции $A$ и $r$ заведомо удовлетворяют этому требованию.
+
+    \begin{remark}
+        Учёт фазовых ограничений в интегральной части функционала качества $J$, представленный в работе,
+        позволяет лишь приближенно уписать условия вида
+        $$
+            g_i(x) \leqslant 0,
+        $$
+        которые часто встречаются в задачах, например, для обхода препятствия.
+        Для этого функция $q$ выбирается таким образом, чтобы штрафовать за приближение траектории к препятствию.
+        Для строго формального решения задачи с подобным условием,
+        необходимо пользоваться методами расширенного лангранжиана~\cite{birgin2009},
+        которые предполагают решение серии задач типа~\eqref{eq:kinematic}-\eqref{eq:cauchy}-\eqref{eq:continuos-cost}.
+        Это приводит к существенному ухудшению асимптотики алгоритмов и тем самым увеличению времени работы программного решения.
+    \end{remark}
+
+    \ifSubfilesClassLoaded{
+        \nocite{*}
+        \clearpage
+        \bibliographystyle{plain}
+        \bibliography{../../refs}
+    }{}
+\end{document}

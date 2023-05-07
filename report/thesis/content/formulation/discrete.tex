@@ -1,0 +1,44 @@
+\documentclass[../../doc.tex]{subfiles}
+\graphicspath{{\subfix{../../img}}}
+\begin{document}
+    \subsection{Дискретизация задачи}
+
+    Для удобства дальнейших рассуждений дискретизируем задачу~\eqref{eq:kinematic}-\eqref{eq:cauchy}-\eqref{eq:continuos-cost} по времени $t_{\textnormal{start}} \leqslant t \leqslant t_{\textnormal{final}}$.
+    Для этого введем равномерную сетку с шагом~$\Delta t$:
+    $$
+        \{ t_i \}_{i=1}^{N+1}, \quad t_1 = t_{\textnormal{start}}, \quad t_{N+1} = t_{\textnormal{final}}, \quad t_{i+1} - t_{i} = \Delta t.
+    $$
+    Тогда, сузив класс допустимых управлений до кусочно-постоянных, получаем дискретный вариант рассматриваемой задачи Коши~\eqref{eq:kinematic}-\eqref{eq:cauchy}:
+    \begin{equation}\label{eq:discrete-system}
+        \begin{cases}
+            x^{k+1} = f(x^k, u^k),\; k=\overline{1,N}, \\
+            x^{1} = x^{\textnormal{start}},
+        \end{cases}
+    \end{equation}
+    где
+    \begin{equation*}
+        f(x^k, u^k) = \Delta t \left(A(x^k) + B u^k \right) + x^k.
+    \end{equation*}
+
+    При этом функционал \eqref{eq:continuos-cost} для дискретной задачи приобретет вид
+    \begin{equation}\label{eq:discrete-cost}
+        J = q^{N+1}(x^{N+1}) + \sum_{k=1}^{N} q^k(x^k) + \sum_{k=1}^{N} r^k(u^k),
+    \end{equation}
+    где
+    \begin{equation*}
+        q^{N+1} = q^{\textnormal{final}},
+        \qquad
+        q^k = w_1 q \Delta t,
+        \qquad
+        r^k = w_2 r \Delta t
+        \qquad
+        k = \overline{1,N}.
+    \end{equation*}
+
+    \ifSubfilesClassLoaded{
+        \nocite{*}
+        \clearpage
+        \bibliographystyle{plain}
+        \bibliography{../../refs}
+    }{}
+\end{document}

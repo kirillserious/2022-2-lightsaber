@@ -13,6 +13,14 @@
 
 \usepackage{xcolor} % Цветной текст для заметок
 
+\usepackage{algorithm2e}      % Красивый вид алгоритмов
+\newenvironment{rusalgorithm}[1][htb]
+  {\renewcommand{\algorithmcfname}{Алгоритм}% Update algorithm name
+   \begin{algorithm}[#1]%
+  }{\end{algorithm}}
+
+\numberwithin{equation}{section} % Нумерация формул с секцией
+
 \usepackage[unicode]{hyperref}                           % Ссылки и русские закладки
 \hypersetup {                                            %
     pdftitle={Выпускная квалификационная работа},        % Название документа

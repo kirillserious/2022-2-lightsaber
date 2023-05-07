@@ -1,0 +1,24 @@
+\section{Математическое моделирование}
+
+\subsection{Дискретизация задачи}
+
+{\color{red} Тут уже чувствуется, что буквы начали повторяться.}
+
+Для удобства дальнейших рассуждений дискретизируем задачу~\eqref{eq:kinematic}-\eqref{eq:cauchy}-\eqref{eq:continuos-cost} по времени $t_0 \leqslant t \leqslant t_1$.
+Для этого введем равномерную сетку с шагом~$\Delta t$:
+$$
+    \{ t_i \}_{i=0}^{N+1}, \quad t_0 = t_0, \quad t_N = t_1, \quad t_{i+1} - t_{i} = \Delta t.
+$$
+Тогда, сузив класс допустимых управлений до кусочно-постоянных, получаем дискретный вариант рассматриваемой задачи Коши~\eqref{eq:kinematic}-\eqref{eq:cauchy}:
+\begin{equation}\label{eq:discrete-system}
+    \left\{\begin{aligned}
+        &x^{k+1} = f(x^k, u^k), \\
+        &x^{0} = x^{0},
+    \end{aligned}\right.
+\end{equation}
+где $f(x^k, u^k) = \Delta t (A(x^k) + B u^k) + x^k$.
+
+При этом функционал \eqref{eq:continuos-cost} для дискретной задачи приобретет вид
+\begin{equation}\label{eq:discrete-cost}
+    J = q^{N+1}(x^{N+1}) + w_1 \sum_{i=0}^{N} \Delta t q(x^N) + w_2 \sum_{i=0}^{N} \Delta t r(u^N).
+\end{equation}

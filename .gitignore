@@ -10,6 +10,8 @@ venv
 *.md5
 *.auxlock
 *converted-to.pdf
+*.bbl
+*.blg
 *.fdb_latexmk
 *.DS_Store
 .ipynb_checkpoints/

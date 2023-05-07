@@ -16,7 +16,7 @@ from matplotlib.lines import Line2D
 from tqdm import tqdm
 
 # Входные даннные
-z_final = Vector([-0.5, 0.8, 0.8, 0.0, 0.0, 0.0])
+z_final = Vector([-0.5, 1.1, 1.4, 0.0, 0.0, 0.0])
 
 
 #speed_target = Vector([0.0, 0.0])
@@ -40,19 +40,23 @@ if start == 'empty':
 elif start == 'dummy':
     #raise Exception('Unexpected start control kind')
     u_nominal = control.Dummy(model, M, L, z_start, t_start, z_final, t_final, delta_t)
+elif start == 'lqr':
+    #raise Exception('Unexpected start control kind')
+    u_nominal = control.LQR(model, M, L, z_start, t_start, z_final, t_final, delta_t)
 else:
     raise Exception('Unexpected start control kind')
 
 z_nominal = trajectory(model, fk, z_start, u_nominal, delta_t)
 
-builder = control.Iterative1(
+builder = control.Iterative3(
     f_z = lambda z, u, step: fk_z(model, z, u, step),
     f_u = lambda z, u, step: fk_u(model, z, u, step),
     #qf = cost.Reaching(model, e_target),
-    qf = 0.00000000000001 * cost.Touch(model, e_target),
-    q = delta_t * 0.0000000000000001 * cost.DummyPhase(),
-    r = delta_t * 0.0000000000000001 * cost.Energy(),
+    qf = 100.0 * cost.Touch(model, e_target),
+    q = delta_t * 0.001 * cost.DummyPhase(),
+    r = delta_t * 0.05 * cost.Energy(),
     step = delta_t,
+    max_d=100.0,
 )
 
 graph = os.getenv('GRAPH', default='animation')

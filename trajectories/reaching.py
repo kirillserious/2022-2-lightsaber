@@ -57,16 +57,26 @@ def dd_speed_reaching_cost(model: Model, e_target: Vector, z: Vector)-> Matrix:
     l = model.l
     return Matrix([[-(2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.sin(z[0])*l[0]*z[3] + (-2*np.cos(z[0])*l[0]*z[3] - 2*np.cos(z[1])*l[1]*z[4] - 2*np.cos(z[2])*l[2]*z[5] + 2*e_target[1])*np.cos(z[0])*l[0]*z[3] + 2*np.sin(z[0])**2*l[0]**2*z[3]**2 + 2*np.cos(z[0])**2*l[0]**2*z[3]**2, 2*np.sin(z[0])*np.sin(z[1])*l[0]*l[1]*z[3]*z[4] + 2*np.cos(z[0])*np.cos(z[1])*l[0]*l[1]*z[3]*z[4], 2*np.sin(z[0])*np.sin(z[2])*l[0]*l[2]*z[3]*z[5] + 2*np.cos(z[0])*np.cos(z[2])*l[0]*l[2]*z[3]*z[5], (2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.cos(z[0])*l[0] + (-2*np.cos(z[0])*l[0]*z[3] - 2*np.cos(z[1])*l[1]*z[4] - 2*np.cos(z[2])*l[2]*z[5] + 2*e_target[1])*np.sin(z[0])*l[0], -2*np.sin(z[0])*np.cos(z[1])*l[0]*l[1]*z[3] + 2*np.sin(z[1])*np.cos(z[0])*l[0]*l[1]*z[3], -2*np.sin(z[0])*np.cos(z[2])*l[0]*l[2]*z[3] + 2*np.sin(z[2])*np.cos(z[0])*l[0]*l[2]*z[3]], [2*np.sin(z[0])*np.sin(z[1])*l[0]*l[1]*z[3]*z[4] + 2*np.cos(z[0])*np.cos(z[1])*l[0]*l[1]*z[3]*z[4], -(2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.sin(z[1])*l[1]*z[4] + (-2*np.cos(z[0])*l[0]*z[3] - 2*np.cos(z[1])*l[1]*z[4] - 2*np.cos(z[2])*l[2]*z[5] + 2*e_target[1])*np.cos(z[1])*l[1]*z[4] + 2*np.sin(z[1])**2*l[1]**2*z[4]**2 + 2*np.cos(z[1])**2*l[1]**2*z[4]**2, 2*np.sin(z[1])*np.sin(z[2])*l[1]*l[2]*z[4]*z[5] + 2*np.cos(z[1])*np.cos(z[2])*l[1]*l[2]*z[4]*z[5], 2*np.sin(z[0])*np.cos(z[1])*l[0]*l[1]*z[4] - 2*np.sin(z[1])*np.cos(z[0])*l[0]*l[1]*z[4], (2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.cos(z[1])*l[1] + (-2*np.cos(z[0])*l[0]*z[3] - 2*np.cos(z[1])*l[1]*z[4] - 2*np.cos(z[2])*l[2]*z[5] + 2*e_target[1])*np.sin(z[1])*l[1], -2*np.sin(z[1])*np.cos(z[2])*l[1]*l[2]*z[4] + 2*np.sin(z[2])*np.cos(z[1])*l[1]*l[2]*z[4]], [2*np.sin(z[0])*np.sin(z[2])*l[0]*l[2]*z[3]*z[5] + 2*np.cos(z[0])*np.cos(z[2])*l[0]*l[2]*z[3]*z[5], 2*np.sin(z[1])*np.sin(z[2])*l[1]*l[2]*z[4]*z[5] + 2*np.cos(z[1])*np.cos(z[2])*l[1]*l[2]*z[4]*z[5], -(2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.sin(z[2])*l[2]*z[5] + (-2*np.cos(z[0])*l[0]*z[3] - 2*np.cos(z[1])*l[1]*z[4] - 2*np.cos(z[2])*l[2]*z[5] + 2*e_target[1])*np.cos(z[2])*l[2]*z[5] + 2*np.sin(z[2])**2*l[2]**2*z[5]**2 + 2*np.cos(z[2])**2*l[2]**2*z[5]**2, 2*np.sin(z[0])*np.cos(z[2])*l[0]*l[2]*z[5] - 2*np.sin(z[2])*np.cos(z[0])*l[0]*l[2]*z[5], 2*np.sin(z[1])*np.cos(z[2])*l[1]*l[2]*z[5] - 2*np.sin(z[2])*np.cos(z[1])*l[1]*l[2]*z[5], (2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.cos(z[2])*l[2] + (-2*np.cos(z[0])*l[0]*z[3] - 2*np.cos(z[1])*l[1]*z[4] - 2*np.cos(z[2])*l[2]*z[5] + 2*e_target[1])*np.sin(z[2])*l[2]], [(2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.cos(z[0])*l[0] - (2*np.cos(z[0])*l[0]*z[3] + 2*np.cos(z[1])*l[1]*z[4] + 2*np.cos(z[2])*l[2]*z[5] - 2*e_target[1])*np.sin(z[0])*l[0], 2*np.sin(z[0])*np.cos(z[1])*l[0]*l[1]*z[4] - 2*np.sin(z[1])*np.cos(z[0])*l[0]*l[1]*z[4], 2*np.sin(z[0])*np.cos(z[2])*l[0]*l[2]*z[5] - 2*np.sin(z[2])*np.cos(z[0])*l[0]*l[2]*z[5], 2*np.sin(z[0])**2*l[0]**2 + 2*np.cos(z[0])**2*l[0]**2, 2*np.sin(z[0])*np.sin(z[1])*l[0]*l[1] + 2*np.cos(z[0])*np.cos(z[1])*l[0]*l[1], 2*np.sin(z[0])*np.sin(z[2])*l[0]*l[2] + 2*np.cos(z[0])*np.cos(z[2])*l[0]*l[2]], [-2*np.sin(z[0])*np.cos(z[1])*l[0]*l[1]*z[3] + 2*np.sin(z[1])*np.cos(z[0])*l[0]*l[1]*z[3], (2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.cos(z[1])*l[1] - (2*np.cos(z[0])*l[0]*z[3] + 2*np.cos(z[1])*l[1]*z[4] + 2*np.cos(z[2])*l[2]*z[5] - 2*e_target[1])*np.sin(z[1])*l[1], 2*np.sin(z[1])*np.cos(z[2])*l[1]*l[2]*z[5] - 2*np.sin(z[2])*np.cos(z[1])*l[1]*l[2]*z[5], 2*np.sin(z[0])*np.sin(z[1])*l[0]*l[1] + 2*np.cos(z[0])*np.cos(z[1])*l[0]*l[1], 2*np.sin(z[1])**2*l[1]**2 + 2*np.cos(z[1])**2*l[1]**2, 2*np.sin(z[1])*np.sin(z[2])*l[1]*l[2] + 2*np.cos(z[1])*np.cos(z[2])*l[1]*l[2]], [-2*np.sin(z[0])*np.cos(z[2])*l[0]*l[2]*z[3] + 2*np.sin(z[2])*np.cos(z[0])*l[0]*l[2]*z[3], -2*np.sin(z[1])*np.cos(z[2])*l[1]*l[2]*z[4] + 2*np.sin(z[2])*np.cos(z[1])*l[1]*l[2]*z[4], (2*np.sin(z[0])*l[0]*z[3] + 2*np.sin(z[1])*l[1]*z[4] + 2*np.sin(z[2])*l[2]*z[5] + 2*e_target[0])*np.cos(z[2])*l[2] - (2*np.cos(z[0])*l[0]*z[3] + 2*np.cos(z[1])*l[1]*z[4] + 2*np.cos(z[2])*l[2]*z[5] - 2*e_target[1])*np.sin(z[2])*l[2], 2*np.sin(z[0])*np.sin(z[2])*l[0]*l[2] + 2*np.cos(z[0])*np.cos(z[2])*l[0]*l[2], 2*np.sin(z[1])*np.sin(z[2])*l[1]*l[2] + 2*np.cos(z[1])*np.cos(z[2])*l[1]*l[2], 2*np.sin(z[2])**2*l[2]**2 + 2*np.cos(z[2])**2*l[2]**2]])
 
-
-builder = control.Iterative1(
-    f_z = lambda z, u, step: fk_z(model, z, u, step),
-    f_u = lambda z, u, step: fk_u(model, z, u, step),
-    qf = cost.Reaching(model, e_target),
-    #q = cost.Empty(),
-    q = delta_t * 0.01 * cost.DummyPhase(),
-    r = delta_t * 0.0000001 * cost.Energy(),
-    step = delta_t,
-)
+if False:
+    builder = control.Iterative1(
+        f_z = lambda z, u, step: fk_z(model, z, u, step),
+        f_u = lambda z, u, step: fk_u(model, z, u, step),
+        qf = cost.Reaching(model, e_target),
+        #q = cost.Empty(),
+        q = delta_t * 0.01 * cost.DummyPhase(),
+        r = delta_t * 0.0000001 * cost.Energy(),
+        step = delta_t,
+    )
+if True:
+    builder = control.Iterative3(
+        f_z = lambda z, u, step: fk_z(model, z, u, step),
+        f_u = lambda z, u, step: fk_u(model, z, u, step),
+        qf = 100 * cost.Reaching(model, e_target),
+        #q = cost.Empty(),
+        q = delta_t * cost.DummyPhase(),
+        r = delta_t * cost.Energy(),
+        step = delta_t,
+    )
 
 graph = os.getenv('GRAPH', default='animation')
 if graph == 'animation':

@@ -28,10 +28,13 @@ def Dummy(
         (np.zeros((n,n)), np.eye(n,n)),
         axis=0,
     )
+    
+    T_mat = 1000.0 * np.eye(2*n, 2*n)
+    
 
-    T_mat = 100000.0 * np.eye(2*n, 2*n)
-    M_mat = step * np.eye(2*n, 2*n)
-    N_mat = step * np.eye(n, n)
+    #M_mat = step * 0.01 * np.eye(2*n, 2*n)
+    M_mat = np.zeros((2*n, 2*n))
+    N_mat = step * 0.001 * np.eye(n, n)
 
     N = int((t_final - t_start) / step)
     print('Backward calculations')
@@ -55,7 +58,7 @@ def Dummy(
         tmp = N_mat + B_mat_T.dot(P_mat_list[i]).dot(B_mat)
         tmp = np.linalg.inv(tmp)
         v[i] = - tmp.dot(B_mat_T).dot(P_mat_list[i]).dot(A_mat).dot(z[i])
-        z[i+1] = A_mat.dot(z[i]) + B_mat.dot(v[i])
+        z[i+1] = A_mat.dot(z[i] + z_final) + B_mat.dot(v[i]) - z_final
 
     for i in tqdm(range(N+1)):
         z[i] = z[i] + z_final

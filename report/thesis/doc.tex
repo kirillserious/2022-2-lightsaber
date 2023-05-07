@@ -1,19 +1,50 @@
 \input{formats/diploma}
 \input{set}
 \input{decl}
+
+\usepackage{subfiles}
+\graphicspath{{\subfix{./img}}}
 \begin{document}
         \input{title_page/doc}
         \tableofcontents
         \clearpage
-        \input{content/introduction}
+        %\clearpage
+        %\input{content/introduction}
+        %\clearpage
+        %\input{content/my_model}
+        %\clearpage
+        %\input{content/my_method}
+        %\clearpage
+        \section{Математическое моделирование}
+                \subfile{content/model/model}
+                \subfile{content/model/dynamic}
+                \subfile{content/model/energy}
+                \clearpage
+
+        \section{Постановка задачи}
+                \subfile{content/formulation/continuous}
+                \subfile{content/formulation/discrete}
+                \clearpage
+
+        \section{Синтез оптимального управления}
+                \subfile{content/iLQR/overview}
+                \subfile{content/iLQR/method}
+                \subfile{content/iLQR/regularization}
+                \subfile{content/iLQR/algorithm}
+                \clearpage
+        
+        \section{Синтез начального референсного управления}
+                \subfile{content/initial_trajectory/initial_overview}
+                \subfile{content/initial_trajectory/initial_trajectory}
+                \subfile{content/initial_trajectory/initial_algorithm}
+                \clearpage
+        %\clearpage
+        %\input{content/task}
+        \cite{texbook}
         \clearpage
-        \input{content/model}
-        \clearpage
-        \input{content/method}
-        \clearpage
-        \input{content/task}
-        \clearpage
-        \begin{thebibliography}{9}
-                \input{bib}
-        \end{thebibliography}
+        \bibliographystyle{plain} % We choose the "plain" reference style
+        \bibliography{refs}
+        %\begin{thebibliography}{9}
+        %        \input{bib}
+        %\end{thebibliography}
 \end{document}

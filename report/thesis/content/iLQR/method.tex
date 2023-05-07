@@ -1,0 +1,214 @@
+\documentclass[../../doc.tex]{subfiles}
+
+\begin{document}
+    \subsection{Синтез оптимальной поправки}
+    
+    Допустим мы имеем некоторое референсное управление~$\bar u=\{\bar u^k\}_{k=1}^{N}$ и соответствующую ему референсную траекторию~$\bar x=\{\bar x^k\}_{k=1}^{N+1}$.
+    Введем обозначения:
+    $$
+        f_x^k = \left.\frac{\partial f}{\partial x}\right|_{(\bar x^k, \bar u^k)},
+        \quad
+        f_u^k = \left.\frac{\partial f}{\partial u}\right|_{(\bar x^k, \bar u^k)},
+    $$
+
+    $$
+        q^k = q(\bar x^k),
+        \quad
+        q_x^k = \left.\frac{\partial q}{\partial x}\right|_{\bar x^k},
+        \quad
+        q_{xx}^k = \left.\frac{\partial^2 q}{\partial x^2}\right|_{\bar x^k},
+    $$
+
+    $$
+        r^k = r(\bar u^k),
+        \quad
+        r_x^k = \left.\frac{\partial r}{\partial u}\right|_{\bar u^k},
+        \quad
+        r_{xx}^k = \left.\frac{\partial^2 r}{\partial u^2}\right|_{\bar u^k}.
+    $$
+
+    Тогда, линеаризуя вдоль референсной траектории задачу Коши~\eqref{eq:discrete-system} и строя квадратичную аппроксимацию вдоль той же траектории функционала качества~\eqref{eq:discrete-cost}, получаем следующую задачу:
+    \begin{equation}\label{eq:ref-system}
+        \left\{\begin{aligned}
+            &\delta x^{k+1} = f_x^k \delta x + f_u^k \delta u, \; k=\overline{1,N}, \\
+            &\delta x^1 = 0.
+        \end{aligned}\right.
+    \end{equation}
+    \begin{multline}\label{eq:ref-cost}
+        J = q^{N+1} + q_x^{N+1}\tilde x^{N+1} + \frac{1}{2}\langle \tilde x^{N+1}, q_{xx}^{N+1}\tilde x^{N+1} \rangle
+        + \\ +
+        \sum_{k=1}^{N}\left[ q^{k} + q_x^{k}\tilde x^{k} + \frac{1}{2}\langle \tilde x^{k}, q_{xx}^{k}\tilde x^{k} \rangle \right]
+        + \\ +
+        \sum_{k=1}^{N}\left[ r^{k} + r_u^{k}\tilde u^{k} + \frac{1}{2}\langle \tilde u^{k}, r_{uu}^{k}\tilde u^{k} \rangle \right],
+    \end{multline}
+    где
+    \begin{equation*}
+        \tilde x^k = \bar x^k + \delta x^k, \qquad \tilde u^k = \bar u^k + \delta u^k.
+    \end{equation*}
+
+    Построим гамильтониан для задачи~\eqref{eq:ref-system}-\eqref{eq:ref-cost}:
+    \begin{multline}\label{eq:hamiltonian}
+        H_k = q^{k} + q_x^{k}\tilde x^{k} + \frac{1}{2}\langle \tilde x^{k}, q_{xx}^{k}\tilde x^{k} \rangle
+        +\\+
+        r^{k} + r_u^{k}\tilde u^{k} + \frac{1}{2}\langle \tilde u^{k}, r_{uu}^{k}\tilde u^{k} \rangle
+        +\\+
+        (\lambda^{k+1})\T (f_x^k \delta x^k + f_u^k \delta u^k),
+    \end{multline}
+    где $\lambda^{k+1}$~--- мультипликаторы Лагранжа.
+
+    Оптимальное управление $\delta u$ должно удовлетворять необходимому условию $\frac{\partial H_k}{\partial u^k} = 0$:
+    \begin{equation*}
+        r_u^k + r_{uu}^k(\bar u^k + \delta u^k) + (f_u^k)\T\lambda^{k+1} = 0.
+    \end{equation*}
+    что дает следующее выражение для поправки:
+    \begin{equation}\label{eq:delta-u}
+        \delta u^k = - (r_{uu}^k)^{-1}[(f_u^k)\T\lambda^{k+1} + r_u^k] - \bar u^k.
+    \end{equation}
+    При этом имеет силу сопряженная задача:
+    \begin{equation}\label{eq:lambda-system}
+        \left\{\begin{aligned}
+            \lambda^k = (f_x^k)\T \lambda^{k+1} + q_x^k + q_{xx}^k(\bar x^k + \delta x^k)
+            \\
+            \lambda^{N+1} = q_x^{N+1} + q_{xx}^{N+1}(\bar x^{N+1} + \delta x^{N+1})
+            .
+        \end{aligned}\right.
+    \end{equation}
+    Из \eqref{eq:delta-u} и \eqref{eq:lambda-system} вытекает
+    \begin{equation}\label{eq:delta-x-lambda-system}
+        \begin{pmatrix}
+            \delta x^{k+1}
+            \\
+            \lambda^{k}
+        \end{pmatrix}
+        =
+        \underbrace{\begin{pmatrix}
+            & f_x^k & -f^k_u (r^k_{uu})^{-1} (f^k_u)\T &
+            \\
+            & q^k_{xx} & (f^k_x)\T &
+        \end{pmatrix}}_{\Phi^k}
+        \begin{pmatrix}
+            \delta x^k
+            \\
+            \lambda^{k+1}
+        \end{pmatrix}
+        +
+        \underbrace{\begin{pmatrix}
+            -f^k_u (r^k_{uu})^{-1} r^k_u
+            \\
+            q^k_x
+        \end{pmatrix}}_{\Gamma^k}.
+    \end{equation}
+
+    \begin{theorem}
+        Оптимальная поправка $\delta u$ для задачи~\eqref{eq:ref-system}-\eqref{eq:ref-cost} вычисляется как
+        \begin{equation}\label{eq:method-optimal-control-result}
+            \delta u^k = - (r^k_{uu} + (f^k_u)\T S_{k+1} f^k_u)^{-1} ((f^k_u)\T S_{k+1} f^k_u \delta x + v^{k+1} + r^k_u),
+        \end{equation}
+        где $S_k$ и $v^{k}$ высчитываются в обратном времени как
+        \begin{equation}\label{eq:method-s-v-result}
+            \begin{aligned}
+                S_k &= \Phi^k_{21} + \Phi^k_{22} S_{k+1} (I - \Phi^k_{12}S_{k+1})^{-1} \Phi^k_{11},
+                \\
+                v^k &= \Phi^k_{22} S_{k+1} ( I - \Phi^k_{12} S_{k+1})^{-1} (\Phi^k_{12} v^{k+1} + \Gamma^k_1) + \Phi^k_{22} v^{k+1} + \Gamma^k_2
+            \end{aligned}
+        \end{equation}
+        с граничными условиями
+        \begin{equation}\label{eq:method-s-v-boundary-result}
+            \begin{aligned}
+                S_{N+1} &= q^{N+1}_{xx},
+                \\
+                v^{N+1} &= q^{N+1}_{x} + q^{N+1}_{xx}\bar x^{N+1}.
+            \end{aligned}
+        \end{equation}
+    \end{theorem}
+    
+    \begin{proof}
+        Предположим, что мультипликаторы $\lambda$ имеют следующую аффинную форму относительно фазовой переменной $\delta x$
+        \begin{equation}\label{eq:lambda-affin}
+            \lambda^{k} = S_k \delta x^k + v^k
+        \end{equation}
+        Тогда из граничного условия \eqref{eq:lambda-system} вытекает граничное условие на $S_k$, $v^k$ \eqref{eq:method-s-v-boundary-result}:
+        \begin{equation*}
+            \begin{gathered}
+                \lambda^{N+1} = q_x^{N+1} + q_{xx}^{N+1}\left(\bar x^{N+1} + \delta x^{N+1}\right)
+                \\ \Downarrow \\
+                S_{N+1} = q^{N+1}_{xx}, v^{N+1} = q^{N+1}_{x} + q^{N+1}_{xx}\bar x^{N+1}.
+            \end{gathered}
+        \end{equation*}
+        Теперь подставим \eqref{eq:lambda-affin} в выражение \eqref{eq:delta-x-lambda-system} для $\delta x^{k+1}$:
+        \begin{equation*}
+            \delta x^{k+1} = \Phi^k_{11} \delta x^k + \Phi^k_{12} (S_{k+1}\delta x^{k+1} + v^{k+1}) + \Gamma^k_{1}.
+        \end{equation*}
+        Получаем
+        \begin{equation*}
+                \delta x^{k+1}
+            =
+                \left(
+                    \underbrace{
+                        I - \Phi^k_{12} S_{k+1}
+                    }_{K_k}
+                \right)^{-1}
+                \!\!\!\!\!\left(
+                    \Phi^k_{11} \delta x^k + \Phi^k_{12} v^{k+1} + \Gamma^k_{1}
+                \right).
+        \end{equation*}
+        Подставим получившееся выражение в \eqref{eq:delta-x-lambda-system} для $\lambda^k$:
+        \begin{multline*}
+                \lambda^{k} = S_k \delta x^k + v^k
+            =
+                \Phi^k_{21} \delta x^k + \Phi^k_{22} \left( S_{k+1} \delta x^{k+1} + v^{k+1} \right) + \Gamma^k_{2}
+            =\\=
+                    \Phi^k_{21} \delta x^k
+                +
+                    \Phi^k_{22}
+                    \left(
+                            S_{k+1} K_k^{-1} (\Phi^k_{11} \delta x^k + \Phi^k_{12} v^{k+1} + \Gamma^k_{1})
+                        +
+                            v^{k+1} 
+                    \right)
+                +
+                    \Gamma^k_{2}.
+        \end{multline*}
+        Таким образом получаем искомые соотношения \eqref{eq:method-s-v-result}:
+        \begin{equation*}
+            \begin{aligned}
+                S_{k} &= \Phi^k_{21} + \Phi^k_{22} S_{k+1} K_k^{-1} \Phi^k_{11},
+                \\
+                v^{k} &= \Phi^k_{22} (S_{k+1} K_k^{-1} ( \Phi^k_{12} v^{k+1} + \Gamma^k_{1} ) + v^{k+1} ) + \Gamma^k_{2}.
+            \end{aligned}
+        \end{equation*}
+        Итоговая формула для оптимальной поправки \eqref{eq:method-optimal-control-result} получается прямой подстановкой получившихся соотношений в выражение \eqref{eq:delta-u}.
+
+    \end{proof}
+    
+    \begin{remark}
+        Приведенная теорема требует существование обратных матриц для $K_k, k=\overline{1,N}$.
+        При этом для нелинейных систем данное условие может не выполняться.
+        Чтобы метод продолжал работать, предлагается в случае нулевого определителя $\textnormal{det}\,K_k = 0$, заменять в формулах \eqref{eq:method-optimal-control-result}, \eqref{eq:method-s-v-result} матрицу $K_k$ на регуляризованную
+        \begin{equation}
+            \mathcal{K}_k = K_k + \mu I.
+        \end{equation}
+        В данной работе при численном построении управления использовалась следующая константа регуляризации:
+        \begin{equation*}
+            \mu = 10^{-8}.
+        \end{equation*}
+    \end{remark}
+
+    \begin{remark}
+        Данная теорема не учитывает возможные ограничения на управление, которые естественным образом возникают для данной задачи.
+        Далее мы будем считать, что задано некоторое поточечное ограницение на управление $u^k \in \mathcal{U}^k$.
+        В этом случае, мы будем считать домножать поправку на некоторую величину $\eta$, такую что $u^k + \eta \delta u^k \in \partial \mathcal{U}^k$.
+    \end{remark}
+
+    {\color{red} Добавить замечание, почему только $r_{uu}$ должна быть $> 0$ --- типа лемма об обращении матриц.}
+
+    {\color{red} Не забыть, что так как метод итеративный, нет надобности рассматривать большую систему с уравнение наблюдаемости, так как это предполагало бы, что каждая итерация алгоритма производится не на компьютере, где с наблюдаемостью все хорошо, а на настоящем человеке.}
+
+
+    \ifSubfilesClassLoaded{
+        \nocite{*}
+        \clearpage
+        \bibliographystyle{plain}
+        \bibliography{../../refs}
+    }{}
+\end{document}

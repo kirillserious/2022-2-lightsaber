@@ -1,0 +1,287 @@
+\documentclass[../../doc.tex]{subfiles}
+
+\begin{document}
+    \subsection{Синтез управления}
+
+    Приведём систему \eqref{eq:discrete-system} к линейному виду заменой управления на
+    \begin{equation}\label{eq:initial-control-definition}
+        \hat u = M^{-1}(x_1)[\tau - L(x_1, x_2)].
+    \end{equation}
+    Тогда в фазовом пространстве $\hat x = [x_1, x_2]\T \in \mathbb{R}^{6}$ задача~Коши примет вид
+    \begin{equation}\label{eq:initial-cauchy-task}
+        \begin{cases}
+            \hat x^{k+1} = \hat A \hat x^{k} + \hat B \hat u^{k}
+            \\
+            \hat x^{0} = x^{\textnormal{start}},
+        \end{cases}
+    \end{equation}
+    где
+    \begin{equation*}
+        \hat A
+        =
+        \begin{pmatrix}
+            \;I\; & \hspace*{-\arraycolsep}\vline\hspace*{-\arraycolsep} & \Delta t I
+            \\
+            \hline
+            \;O\; & \hspace*{-\arraycolsep}\vline\hspace*{-\arraycolsep} & I
+        \end{pmatrix}
+        ,\quad
+        \hat B
+        =
+        \begin{pmatrix}
+            O
+            \\
+            \hline
+            \Delta t I
+        \end{pmatrix}
+        .
+    \end{equation*}
+
+    Будем считать, что для исходной задачи задачи~(??) известно некоторое состояние $x^{\textnormal{final}}$, минимизирующее терминальное условие $q^{\textnormal{final}}$, то есть
+    \begin{equation*}\label{eq:initial-x-final-definition}
+        x^{\textnormal{final}} \in \textnormal{Argmin}\; q^{\textnormal{final}}(x).
+    \end{equation*}
+    В таком случае для задачи~Коши~\eqref{eq:initial-cauchy-task} поставим задачу минимизации следующего функционала
+    \begin{equation}\label{eq:initial-cost-definition}
+        J
+        =
+            \left\| \hat x^{N+1} - x^{\textnormal{final}} \right\|^2
+            +
+            \hat w_1 \sum_{k=1}^{N} \left\langle \hat x^k, \hat Q \hat x^k \right\rangle
+            +
+            \hat w_2 \sum_{k=1}^{N} \left\| \hat u^k \right\|^2
+        \longrightarrow
+        \textnormal{min}.
+    \end{equation}
+    
+    Здесь матрица $\hat Q = \hat Q\T$ выбирается для исключения возможного \textit{проворачивания} сочленений относительно друг друга следующим образом
+    \begin{equation}\label{eq:initial-phase-definition}
+        \hat Q
+        =
+        \begin{pmatrix}
+                \begin{matrix}
+                    \hphantom{-}2 & -1            & \hphantom{-}0 \\
+                    -1            & \hphantom{-}2 & -1            \\
+                    \hphantom{-}0 & -1            & \hphantom{-}1
+                \end{matrix}
+                & \hspace*{-\arraycolsep}\vline\hspace*{-\arraycolsep} &
+                O
+            \\\hline
+                O
+                & \hspace*{-\arraycolsep}\vline\hspace*{-\arraycolsep} &
+                O
+        \end{pmatrix}
+        .
+    \end{equation}
+    Иными словами матрица $\hat Q$ является матрицей следующей квадратичной формы
+    \begin{equation*}
+        \left\langle
+            \hat x, \hat Q \hat x
+        \right\rangle
+        =
+        \theta_1^2 + (\theta_2 - \theta_1)^2 + (\theta_3 - \theta_2)^2.
+    \end{equation*}
+    Данное фазовое условие штрафует траекторию в случае большого относительного отклонения между углами сочленений.
+
+    После решения задачи \eqref{eq:initial-cauchy-task}-\eqref{eq:initial-cost-definition} мы можем восстановить соответствующее управление исходной задачи.
+    Пусть $\hat u^{*}$, $\hat x^{*}$~--- оптимальное управление и соответствующая ему оптимальная траектория задачи \eqref{eq:initial-cauchy-task}-\eqref{eq:initial-cost-definition}.
+    Тогда соответствующее управление для исходной задачи $u$, можно получить по формуле
+    \begin{equation}\label{eq:initial-control-translate}
+        u^{k} = \frac{\hat \tau^{k+1} - \hat \tau^{k}}{\Delta t},
+    \end{equation}
+    где
+    \begin{equation*}
+        \begin{cases}
+            \hat \tau^k = M(\hat x_1^{k*})\hat u^{k*} + L(\hat x_1^{k*}, \hat x_2^{k*}), \mbox{ при } k=\overline{1, N}
+            \\
+            \hat \tau^{N+1} = 0.
+        \end{cases}
+    \end{equation*}
+
+    Построим гамильтониан задачи \eqref{eq:initial-cauchy-task}-\eqref{eq:initial-cost-definition}
+    \begin{equation}\label{eq:initial-hamiltonian}
+        \hat H_k
+        =
+            \left\langle \hat x^k, \hat w_1 \hat Q \hat x^k \right\rangle
+            +
+            \left\langle \hat u^k, \hat w_2 \hat u^k \right\rangle
+            +
+            (\hat \lambda^{k+1})\T [\hat A \hat x^k + \hat B \hat u^k]
+        .
+    \end{equation}
+    Оптимальное управление $\hat u^*$ должно удовлетворять необходимому условию оптимальности:
+    \begin{equation*}
+            \left.\frac{\partial \hat H_k}{\partial \hat u^k}\right|_{\hat u^k = \hat u^{k*}}
+        =
+            \hat w_2 \hat u^{k*} + \hat B \T \hat \lambda^{k+1}
+        =
+            0,
+    \end{equation*}
+    что дает следующее выражение для управления
+    \begin{equation}\label{eq:initial-optimal-control-definition}
+        \hat u^{k*} = -\frac{1}{\hat w_2} \hat B \T \hat \lambda^{k+1}.
+    \end{equation}
+    И уравнение \eqref{eq:initial-cauchy-task} можно переписать в следующем виде:
+    \begin{equation}\label{eq:initial-x-over-lambda}
+        \hat x^{k+1} = \hat A \hat x^{k} - \frac{1}{\hat w_2} \hat B \hat B\T \hat \lambda^{k+1}.
+    \end{equation}
+    При этом имеет силу следующая сопряженная система:
+    \begin{equation}\label{eq:initial-lambda-system-definition}
+        \begin{cases}
+            \hat \lambda^{k} = \hat w_1 \hat Q \hat x^{k} + \hat A\T \hat \lambda^{k+1}, \mbox{ при } k = \overline{1, N}
+            \\
+            \hat \lambda^{N+1} = \hat x^{N+1} - x^{\textnormal{final}}
+        \end{cases}
+    \end{equation}
+    
+    \begin{theorem}
+        Оптимальное управление $\hat u^*$ задачи \eqref{eq:initial-cauchy-task}-\eqref{eq:initial-cost-definition} задается формулой
+        \begin{equation}\label{eq:initial-optimal-control-result}
+            \hat u^{k*} = \hat L_{k} \hat x^{k} + \hat d^k,
+        \end{equation}
+        где
+        \begin{equation*}
+            \begin{aligned}
+                & \hat L_k = -\frac{1}{\hat w_2} \hat B\T S_{k+1}\left( I + \frac{1}{\hat w_2} \hat B \hat B\T S_{k+1} \right)^{-1} \hat A,
+                \\
+                & \hat d^k = -\frac{1}{\hat w_2} \hat B\T \left( I - S_{k+1} \left( I + \frac{1}{\hat w_2} \hat B \hat B\T S_{k+1} \right)^{-1} \hat B \hat B\T \right) v^{k+1}.
+            \end{aligned}
+        \end{equation*}
+        Причем переменные $S_{k}$, $v^{k}$ могут быть найдены в обратном времени из соотношений
+        \begin{equation}\label{eq:initial-S-v-result}
+            \begin{aligned}
+                &
+                        S_k
+                    =    
+                            \hat w_1 \hat Q
+                        +
+                            \hat A\T S_{k+1} \left(
+                                    I + \frac{1}{\hat w_2} \hat B \hat B\T S_{k+1}     
+                            \right)^{-1} \hat A
+                    ,
+                \\
+                &
+                        v_k
+                    =
+                        \hat A\T
+                        \left(
+                            I - \frac{1}{\hat w_2} S_{k+1} \left(
+                                I + \frac{1}{\hat w_2} \hat B \hat B\T S_{k+1}     
+                        \right)^{-1} \hat B \hat B\T
+                        \right)
+                        v^{k+1}
+            \end{aligned}
+        \end{equation}
+        с граничными условиями
+        \begin{equation}\label{eq:initial-S-v-boundary-condition}
+            \begin{aligned}
+                & S_{N+1} = I,
+                \\
+                & v^{N+1} = - x^{\textnormal{final}}.
+            \end{aligned}
+        \end{equation}
+    \end{theorem}
+    
+    \begin{proof}
+        Аналогично доказательству теоремы~(1) будем искать решение сопряженной системы в аффинном виде
+        \begin{equation}\label{eq:initial-lambda-affin}
+            \hat \lambda^{k} = S_k \hat x^k + v^k.
+        \end{equation}
+        Из сопряженной системы~\eqref{eq:initial-lambda-system-definition} получаем граничные условия:
+        \begin{equation*}
+            \hat \lambda^{N+1} = \hat x^{N+1} - x^{\textnormal{final}}
+            \quad\Longrightarrow\quad
+            S_{N+1} = I,
+            \;
+            v^{N+1} = - x^{\textnormal{final}}.
+        \end{equation*}
+        Подставив выражение~\eqref{eq:initial-lambda-affin} в уравнение \eqref{eq:initial-x-over-lambda}, получим
+        \begin{equation*}
+            \hat x^{k+1} = \hat A \hat x^{k} - \frac{1}{\hat w_2} \hat B \hat B\T (S_{k+1} \hat x^{k+1} + v^{k+1}),
+        \end{equation*}
+        откуда выражаем
+        \begin{equation*}
+            \hat x^{k+1}
+            =
+                \left(
+                    \underbrace{
+                        I + \frac{1}{\hat w_2} \hat B \hat B\T S_{k+1}
+                    }_{K_k}
+                \right)^{-1}
+                \left(
+                    \hat A \hat x^{k} - \frac{1}{\hat w_2} \hat B \hat B\T v^{k+1}
+                \right).
+        \end{equation*}
+        Теперь подставим получившееся выражение в \eqref{eq:initial-lambda-system-definition}:
+        \begin{multline*}
+                \hat \lambda^{k}
+            =
+                S_k \hat x^{k} + v^{k}
+            =
+                    \hat w_1 \hat Q \hat x^{k}
+                +
+                    \hat A\T (S_{k+1} \hat x^{k+1} + v^{k+1})
+            =\\=
+                    \hat w_1 \hat Q \hat x^{k}
+                +
+                    \hat A\T
+                    S_{k+1} 
+                    K_k^{-1}
+                    \left(
+                        \hat A \hat x^{k} - \frac{1}{\hat w_2} \hat B \hat B\T v^{k+1}
+                    \right)
+                +
+                    \hat A\T v^{k+1}
+            =\\=
+                    \left(
+                            \hat w_1 \hat Q
+                        +
+                            \hat A\T S_{k+1} K_k^{-1} \hat A
+                    \right) \hat x^{k}
+                +
+                    \hat A\T
+                    \left(
+                        I - \frac{1}{\hat w_2} S_{k+1} K_k^{-1} \hat B \hat B\T
+                    \right)
+                    v^{k+1}.
+        \end{multline*}
+        Откуда получаем искомые соотношения:
+        \begin{equation*}
+            \begin{aligned}
+                &
+                        S_k
+                    =    
+                            \hat w_1 \hat Q
+                        +
+                            \hat A\T S_{k+1} \left(
+                                    I + \frac{1}{\hat w_2} \hat B \hat B\T S_{k+1}     
+                            \right)^{-1} \hat A
+                    ,
+                \\
+                &
+                        v_k
+                    =
+                        \hat A\T
+                        \left(
+                            I - \frac{1}{\hat w_2} S_{k+1} \left(
+                                I + \frac{1}{\hat w_2} \hat B \hat B\T S_{k+1}     
+                        \right)^{-1} \hat B \hat B\T
+                        \right)
+                        v^{k+1}
+                    .
+            \end{aligned}
+        \end{equation*} 
+        Теперь выражение для оптимального управления \eqref{eq:initial-optimal-control-result} получается прямой подстановкой получившихся соотношений в выражение \eqref{eq:initial-optimal-control-definition}.
+     
+    \end{proof}
+
+    \ifSubfilesClassLoaded{
+        \nocite{*}
+        \clearpage
+        \bibliographystyle{plain}
+        \bibliography{../../refs}
+    }{}
+\end{document}
+
+
+

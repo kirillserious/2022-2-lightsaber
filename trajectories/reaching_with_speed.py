@@ -1,35 +1,13 @@
 #!/usr/bin/python3
-'''
-    START = empty | dummy
-    ITER = 5 
-    GRAPH = animation | endpoint | pendulum
-'''
 
-'''
-    Трёхсекционный дискретный маятник
-    
-        z^{k+1} = z^{k} + \Delta t * f(z^{k}, u^{k})
-
-    c управлением u, минимизирующем
-
-        J = \langle x - x^{N}, Q_N (x - x^{N}) \\rangle + \sum_{k=0}^{N-1} ( \langle x^{k}, Q x^{k} \\rangle + \langle u^{k}, R u^{k} \\rangle) 
-
-    let u_nominal == 0, x_nominal - corresponding trajectory:
-        u = u_nominal + delta_u
-        x = x_nominal + delta_x
-    
-    delta_x^{k+1} = A^{k} * delta_x^{k} + B^{k} * delta_u^{k}
-
-'''
 import os
 from typing import List
 from common import Vector, Matrix, Model, trajectory, end_effector
-from common import t_start, z_start, t_final, l, m, I, g, delta_t
+from common import t_start, z_start, t_final, m, I, g, delta_t
+from precalculated import fk, fk_u, fk_z, M, L
 import graphic
 import control
 import cost
-
-from precalculated import fk, fk_u, fk_z, M, L
 
 import numpy as np
 
@@ -37,38 +15,26 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from tqdm import tqdm
 
-
 # Входные даннные
-
 z_final = Vector([-0.5, 1.1, 1.4, -5.0, -5.0, -5.0])
-l = [0.7, 0.7, 1.6]
 
-Q_final = 1000000.0 *Matrix([
-    [1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+
+#speed_target = Vector([0.0, 0.0])
+l = [0.7, 0.7, 1.6]
+e_target = Vector([
+    sum([l[i]*np.cos(z_final[i]) for i in range(3)]),
+    sum([l[i]*np.sin(z_final[i]) for i in range(3)]),
 ])
-Q = Matrix([
-    [1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 1.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
-    [0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+e_speed_target = Vector([
+    sum([-l[i]*np.sin(z_final[3+i])*z_final[i] for i in range(3)]),
+    sum([l[i]*np.cos(z_final[3+i])*z_final[i]  for i in range(3)]),
 ])
-R = Matrix([
-    [1.0, 0.0, 0.0],
-    [0.0, 1.0, 0.0],
-    [0.0, 0.0, 1.0],
-])
+
+print(e_speed_target)
 
 # Алгоритм
 delta_t = 0.001
 N = int(np.ceil((t_final - t_start) / delta_t))
-
 t = np.arange(t_start, t_final, delta_t)
 
 model = Model(l, m, I, g)
@@ -85,25 +51,26 @@ else:
 
 z_nominal = trajectory(model, fk, z_start, u_nominal, delta_t)
 
+if False:
+    builder = control.Iterative1(
+        f_z = lambda z, u, step: fk_z(model, z, u, step),
+        f_u = lambda z, u, step: fk_u(model, z, u, step),
+        qf = cost.Reaching(model, e_target),
+        #q = cost.Empty(),
+        q = delta_t * 0.01 * cost.DummyPhase(),
+        r = delta_t * 0.0000001 * cost.Energy(),
+        step = delta_t,
+    )
 if True:
     builder = control.Iterative3(
         f_z = lambda z, u, step: fk_z(model, z, u, step),
         f_u = lambda z, u, step: fk_u(model, z, u, step),
-        qf = 100.0 * cost.TargetFinal(z_final),
-        q = delta_t * cost.DummyPhase(),
-        r = delta_t *  cost.Energy(),
+        qf = 100 * cost.Reaching(model, e_target) + 50 * cost.ReachingSpeed(model, e_speed_target),
+        #q = cost.Empty(),
+        q = delta_t * 0.01 * cost.DummyPhase(),
+        r = delta_t * 0.01 * cost.Energy(),
         step = delta_t,
-        max_d=100.0,
-    )
-
-if False:
-    builder = control.Iterative2(
-        f_z = lambda z, u, step: fk_z(model, z, u, step),
-        f_u = lambda z, u, step: fk_u(model, z, u, step),
-        qf = cost.TargetFinal(z_final),
-        q = cost.Empty(),
-        r = delta_t *  cost.Energy(),
-        step = delta_t,
+        max_d=1000.0,
     )
 
 graph = os.getenv('GRAPH', default='animation')
@@ -111,8 +78,9 @@ if graph == 'animation':
     def picture(z: List[Vector], u: List[Vector], t: List[float])->None:
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        x_final, y_final = graphic.pendulum_line(l, z_final)
-        ax.plot(x_final, y_final, 'o-', lw=1)
+        ax.plot(e_target[0], e_target[1], 'o-', lw=1)
+        #x_final, y_final = graphic.pendulum_line(l, z_final)
+        #ax.plot(x_final, y_final, 'o-', lw=1)
         
         ani = graphic.PendulumAnimation(fig, ax, l, z, t)
         plt.show()
@@ -146,14 +114,14 @@ if graph == 'endpoint':
 
     graphic.end_effector_lines(ax, l, zs, t_start, delta_t)
     target = end_effector(z_final, l)
-    ax.plot3D([t_final], [target[0]], [target[1]], 'o-', lw=2, c='C2')
+    ax.plot3D([t_final], [target[0]], [target[1]], 'o-', lw=2, c='C3')
     ax.set_xlabel('$t$')
     ax.set_ylabel('$x$')
     ax.set_zlabel('$y$')
     ax.legend(handles=[
         Line2D([0], [0], color='C1', label='Начальная траектория'),
         Line2D([0], [0], color='C0', label='Итерации алгоритма'),
-        Line2D([0], [0], color='C2', marker='o', linestyle='None', label='Целевое положение'),
+        Line2D([0], [0], color='C3', marker='o', linestyle='None', label='Целевое положение'),
     ])
     ax.view_init(elev=40, azim=-50, roll=0)
 
@@ -182,9 +150,11 @@ if graph == 'pendulum':
         end_effectors[1] += [ef[1]]
 
     ax.plot(end_effectors[0], end_effectors[1], c='C1')
+    ax.plot([e_target[0]], [e_target[1]], 'o-', lw=2, c='C2')
     ax.legend(handles=[
         Line2D([0], [0], color='C0', label='Сочленения руки'),
-        Line2D([0], [0], color='C1', label='Траектория схвата')
+        Line2D([0], [0], color='C1', label='Траектория схвата'),
+        Line2D([0], [0], marker='o', linestyle='None', color='C2', label='Целевое положение')
     ])
     ax.set_xlabel('$x$')
     ax.set_ylabel('$y$')
@@ -195,4 +165,3 @@ if graph == 'pendulum':
     exit()
 
 raise Exception('Unexpected graph kind')
-
