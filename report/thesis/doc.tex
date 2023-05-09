@@ -1,17 +1,22 @@
 \input{formats/diploma}
 \input{set}
 \input{decl}
-
+\usepackage[toc,page,title]{appendix}
+\renewcommand{\appendixname}{Приложение}
+\renewcommand{\appendixtocname}{Приложения}
+\renewcommand{\appendixpagename}{Приложения}
+\usepackage{multirow}
 \usepackage{subfiles}
 \graphicspath{{\subfix{./img}}}
 \begin{document}
         \input{title_page/doc}
         \tableofcontents
         \clearpage
+        \section{Введение}
+                \subfile{content/introduction}
+                \clearpage
         %\clearpage
         %\input{content/introduction}
-        %\clearpage
-        %\input{content/my_model}
         %\clearpage
         %\input{content/my_method}
         %\clearpage
@@ -38,13 +43,26 @@
                 \subfile{content/initial_trajectory/initial_trajectory}
                 \subfile{content/initial_trajectory/initial_algorithm}
                 \clearpage
-        %\clearpage
-        %\input{content/task}
-        \cite{texbook}
-        \clearpage
-        \bibliographystyle{plain} % We choose the "plain" reference style
+        
+        \section{Примеры}
+                \subfile{content/examples/endpoint}
+                \subfile{content/examples/obstacle}
+                \clearpage
+        
+        \section{Заключение}
+                \subfile{content/conclusion}
+                \clearpage
+
+        \addcontentsline{toc}{section}{Cписок литературы}
+        \bibliographystyle{plain}
         \bibliography{refs}
-        %\begin{thebibliography}{9}
-        %        \input{bib}
-        %\end{thebibliography}
+        \clearpage
+
+        \begin{appendices}
+                \subfile{content/appendix/constants}
+                
+                \section{Матрица инерции}
+        \end{appendices}
+        %\appendix
+        %\section{Приложение: Таблица констант}
 \end{document}

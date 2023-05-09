@@ -6,7 +6,7 @@
     Алгоритм \ref{alg:initial:algo} резюмирует метод, предложенный в данном разделе.
 
     На Рис.~\ref{fig:initial:pendulum} представлен результат работы алгоритма для задачи (??) с построенным начальным управлением.
-    
+
 
     \RestyleAlgo{ruled}
     \begin{rusalgorithm}\caption{Поиск начальной траектории}\label{alg:initial:algo}
@@ -50,6 +50,12 @@
             Алгоритм сошелся на $4$ итерации.
         }
         \label{fig:initial:pendulum}
+    \end{figure}
+    \begin{figure}[h]
+        \begin{center}
+            \includegraphics[width=0.7\textwidth]{initial/compare.pdf}
+        \end{center}
+        \caption{Сравнение скорости сходимости для задачи (??) в зависимости от выбора начального референсного управления.}
     \end{figure}
 
     \ifSubfilesClassLoaded{

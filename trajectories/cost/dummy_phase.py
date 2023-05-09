@@ -8,7 +8,7 @@ class DummyPhase(Cost):
         pass
 
     def cost(self, z:Vector, step:float):
-        return z.T * z
+        return z.T.dot(z)
     
     def d_cost(self, z:Vector, step:float):
         return z

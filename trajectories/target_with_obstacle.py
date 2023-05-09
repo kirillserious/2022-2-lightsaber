@@ -40,8 +40,13 @@ from matplotlib.lines import Line2D
 
 # Входные даннные
 
-z_final = Vector([0.8, 1.1, 1.2, 0.0, 0.0, 0.0])
-l = [1.2, 1.2, 0.6]
+#z_final = Vector([0.8, 1.1, 1.2, 0.0, 0.0, 0.0])
+#l = [1.2, 1.2, 0.6]
+
+z_final = Vector([-0.5, 1.1, 1.4, 0, 0, 0])
+l = [0.7, 0.7, 1.6]
+m = [0.08, 0.08, 0.1]
+I = [m[i] * l[i] * l[i] / 3 for i in range(3)]
 
 # Алгоритм
 delta_t = 0.001
@@ -55,6 +60,8 @@ model = Model(l, m, I, g)
 start = os.getenv('START', default='empty')
 if start == 'empty':
     u_nominal = control.Empty(model, fk, z_start, t_start, t_final, delta_t)
+elif start == 'lqr':
+    u_nominal = control.LQR(model, M, L, z_start, t_start, z_final, t_final, delta_t)
 elif start == 'dummy':
     u_nominal = control.Dummy(model, M, L, z_start, t_start, z_final, t_final, delta_t)
 else:
@@ -63,16 +70,17 @@ else:
 z_nominal = trajectory(model, fk, z_start, u_nominal, delta_t)
 
 r_obstacle = 0.1
-obstacle = Vector([2.0, -2.0])
+obstacle = Vector([2.2, -2.0])
 
 step = 0.001
 builder = control.Iterative1(
     f_z = lambda z, u, step: fk_z(model, z, u, step),
     f_u = lambda z, u, step: fk_u(model, z, u, step),
     qf = 100.0 * cost.TargetFinal(z_final),
-    q = step * cost.Obstacle(model, obstacle, r_obstacle),
+    q = step * 0.2 * cost.Obstacle(model, obstacle, r_obstacle),
     r = step *  cost.Energy(),
     step = step,
+    #max_d=500.0,
 )
 
 
@@ -95,20 +103,20 @@ if graph == 'endpoint':
 
     graphic.end_effector_lines(ax, l, zs, t_start, 0.001)
     target = end_effector(z_final, l)
-    ax.plot3D([t_final], [target[0]], [target[1]], 'o-', lw=2, c='C3')
+    ax.plot3D([t_final], [target[0]], [target[1]], 'o-', lw=2, c='C2')
     ax.set_xlabel('$t$')
     ax.set_ylabel('$x$')
     ax.set_zlabel('$y$')
     ax.legend(handles=[
         Line2D([0], [0], color='C1', label='Начальная траектория'),
         Line2D([0], [0], color='C0', label='Итерации алгоритма'),
-        Line2D([0], [0], color='C3', marker='o', linestyle='None', label='Целевое положение'),
+        Line2D([0], [0], color='C2', marker='o', linestyle='None', label='Целевое положение'),
     ])
     ax.view_init(elev=40, azim=-50, roll=0)
     if output is None:
         plt.show()
     else:
-        plt.savefig(output, format='pdf', dpi=1200)
+        plt.savefig(output, format='pdf', bbox_inches='tight', dpi=1200)
     exit()
 
 if graph == 'pendulum':
@@ -132,7 +140,7 @@ if graph == 'pendulum':
     ax.plot(end_effectors[0], end_effectors[1], c='C1')
 
     from matplotlib.patches import Circle
-    circle = Circle((2.0, -2.0), r_obstacle, color='C3')
+    circle = Circle((obstacle[0], obstacle[1]), r_obstacle, color='C3')
     ax.add_patch(circle)
     ax.legend(handles=[
         Line2D([0], [0], color='C0', label='Сочленения руки'),
@@ -144,7 +152,7 @@ if graph == 'pendulum':
     if output is None:
         plt.show()
     else:
-        plt.savefig(output, format='pdf', dpi=1200)
+        plt.savefig(output, format='pdf', bbox_inches='tight', dpi=1200)
     exit()
 
 raise Exception('Unexpected graph kind')
