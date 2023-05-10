@@ -6,6 +6,18 @@
     Алгоритмы \ref{alg:BackwardPass}, \ref{alg:ForwardPass} демонстрируют обратный и прямой проход для получения оптимальной поправки.
     Алгоритм \ref{alg:Sinthesis} демонстрирует общий алгоритм построения управления.
 
+    Продемонстрируем работу алгоритма для классической задачи перехода в целевое состояние~$x^{\textnormal{final}}$ без фазовых ограничений.
+    Для этого будем использовать следующие компоненты функции цены:
+    \begin{equation}\label{eq:ilqr-algo:cost}
+        q^{\textnormal{final}}(x) = \left\|x - x^{\textnormal{final}}\right\|^2,
+        \qquad
+        q(x) \equiv 0.
+    \end{equation}
+    Начальным референсным управлением выберем
+    \begin{equation}\label{eq:ilqr-algo:ref-control}
+        \bar u^k = 0,\; k = \overline{1, N}.
+    \end{equation}
+    
     \RestyleAlgo{ruled}
     \begin{rusalgorithm}\caption{Обратный проход}\label{alg:BackwardPass}
         \DontPrintSemicolon
@@ -15,58 +27,45 @@
             \For{$k \gets N$ \KwTo $1$}{
                 $S_k, v^{k} \gets $ \eqref{eq:method-s-v-result}\;
             }
-            \;
             \Return{S, v}
         }
     \end{rusalgorithm}
-
     \RestyleAlgo{ruled}
     \begin{rusalgorithm}\caption{Прямой проход}\label{alg:ForwardPass}
         \DontPrintSemicolon
         \SetKwProg{Function}{function}{\;begin}{end function}
         \SetKwRepeat{Do}{do}{while}
-        \Function{ForwardPass($\bar u$, $\bar x$)}{
-            $\eta, \gamma \gets 1, \frac{1}{2}$\;
-            \Do{$\xi_1 \leqslant \frac{J_{\textnormal{prev}} - J}{J_{\delta}(0) - J_{\delta}(\delta u)} \leqslant \xi_2$}{
+        \Function{ForwardPass($\bar u$, $\bar x$, $J_{\textnormal{prev}}$)}{
+            $\eta \gets 1$\;
+            \Do{$\frac{J_{\textnormal{prev}} - J}{J_{\delta}(0) - J_{\delta}(\delta u)} \notin [\xi_1, \xi_2]$}{
+                $\delta x^0 \gets 0$\;
                 \For{$k \gets 1$ \KwTo $N$}{
                     $\delta u^k, \delta x^{k+1} \gets$ \eqref{eq:method-optimal-control-result}, \eqref{eq:ref-system} \;
                     $u^k \gets \bar u^k + \delta u^k$\;
                 }
-                $\eta \gets \gamma \eta$
+                $J \gets$ \eqref{eq:discrete-cost} \;
+                $\eta \gets \gamma \eta$\;
             }
-            \Return{u}
+            \Return{u, J}
         }
     \end{rusalgorithm}
-
+    
     \RestyleAlgo{ruled}
     \begin{rusalgorithm}\caption{Синтез управления}\label{alg:Sinthesis}
         \DontPrintSemicolon
         \SetKwProg{Function}{function}{\;begin}{end function}
         \SetKwRepeat{Do}{do}{while}
         \Function{Synthesis($\bar u$)}{
-            $J \gets $ (формула)\;
-            \Do{$\|J - J_{\textnormal{prev}}\| < \varepsilon$}{
+            $J \gets $ \eqref{eq:discrete-cost}\;
+            \Do{$|J - J_{\textnormal{prev}}| \geqslant \varepsilon$}{
                 $J_{\textnormal{prev}} \gets J$\;
-                $\bar x \gets$ (формула)\;
+                $\bar x \gets$ \eqref{eq:discrete-system}\;
                 $S, v \gets \textnormal{BackwardPass}(\bar u, \bar x)$\;
-                $u \gets \textnormal{ForwardPass}(S, v, J_{\textnormal{prev}})$\;
-                $J \gets $ (формула)\;
+                $u, J \gets \textnormal{ForwardPass}(S, v, J_{\textnormal{prev}})$\;
             }
             \Return{u}
         }
     \end{rusalgorithm}
-
-    Продемонстрируем работу алгоритма для классической задачи перехода в целевое состояние~$x^{\textnormal{final}}$ без фазовых ограничений.
-    Для этого будем использовать следующие компоненты функции цены:
-    \begin{equation}\label{eq:ilqr-algo:cost}
-        q^{\textnormal{final}}(x) = \|x - x^{\textnormal{final}}\|^2,
-        \qquad
-        q(x) \equiv 0.
-    \end{equation}
-    Начальным референсным управлением выберем
-    \begin{equation}\label{eq:ilqr-algo:ref-control}
-        \bar u^k = 0,\; k = \overline{1, N}.
-    \end{equation}
 
     \begin{figure}[h]
         \begin{center}
@@ -76,10 +75,6 @@
         \caption{
             Решение задачи перехода в целевое состояние \eqref{eq:ilqr-algo:cost} c начальным референсным управлением \eqref{eq:ilqr-algo:ref-control}.
             Слева: поведение системы при полученном управлении. Справа: траектории схвата на каждой итерации алгоритма, более ранние итерации показаны бледнее.
-            Начальное положение $x_1^{\textnormal{start}} = [-1,\!4; -1,\!4; -1,\!4]\T$, $x_2^{\textnormal{start}} = 0$, $x_3^{\textnormal{start}} = 0$.
-            Конечное положение $x_1^{\textnormal{final}} = [-0,\!5; 1,\!1; 1,\!4]\T$, $x_2^{\textnormal{final}} = [ -5,\!0; -5,\!0; -5,\!0]\T$,  $x_3^{\textnormal{final}} = 0$.
-            Коэффициент значимости энергетического критерия $w_2 = 10^{-2}$.
-            Коэффициент остановки $\varepsilon = 10^{-2}$.
             Алгоритм сошелся на $14$ итерации.
         }
     \end{figure}

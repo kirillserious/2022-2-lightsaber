@@ -2,7 +2,7 @@
 \input{set}
 \input{decl}
 \usepackage[toc,page,title]{appendix}
-\renewcommand{\appendixname}{Приложение}
+\renewcommand{\appendixname}{}
 \renewcommand{\appendixtocname}{Приложения}
 \renewcommand{\appendixpagename}{Приложения}
 \usepackage{multirow}
@@ -15,11 +15,7 @@
         \section{Введение}
                 \subfile{content/introduction}
                 \clearpage
-        %\clearpage
-        %\input{content/introduction}
-        %\clearpage
-        %\input{content/my_method}
-        %\clearpage
+
         \section{Математическое моделирование}
                 \subfile{content/model/model}
                 \subfile{content/model/dynamic}
@@ -46,7 +42,10 @@
         
         \section{Примеры}
                 \subfile{content/examples/endpoint}
+                \subfile{content/examples/endpoint_speed}
                 \subfile{content/examples/obstacle}
+                % Так и не подобрал параметры нормально :(
+                %\subfile{content/examples/touch}
                 \clearpage
         
         \section{Заключение}
@@ -60,9 +59,7 @@
 
         \begin{appendices}
                 \subfile{content/appendix/constants}
-                
-                \section{Матрица инерции}
+                % Лениво перепечатывать
+                %\section{Матрица инерции}
         \end{appendices}
-        %\appendix
-        %\section{Приложение: Таблица констант}
 \end{document}

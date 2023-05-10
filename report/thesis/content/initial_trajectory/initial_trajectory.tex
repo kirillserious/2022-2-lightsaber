@@ -10,9 +10,9 @@
     Тогда в фазовом пространстве $\hat x = [x_1, x_2]\T \in \mathbb{R}^{6}$ задача~Коши примет вид
     \begin{equation}\label{eq:initial-cauchy-task}
         \begin{cases}
-            \hat x^{k+1} = \hat A \hat x^{k} + \hat B \hat u^{k}
+            \hat x^{k+1} = \hat A \hat x^{k} + \hat B \hat u^{k},\; k=\overline{1,N},
             \\
-            \hat x^{0} = x^{\textnormal{start}},
+            \hat x^{1} = x^{\textnormal{start}},
         \end{cases}
     \end{equation}
     где
@@ -37,7 +37,7 @@
         .
     \end{equation*}
 
-    Будем считать, что для исходной задачи задачи~(??) известно некоторое состояние $x^{\textnormal{final}}$, минимизирующее терминальное условие $q^{\textnormal{final}}$, то есть
+    Будем считать, что для исходной задачи задачи~\eqref{eq:discrete-system}-\eqref{eq:discrete-cost} известно некоторое состояние $x^{\textnormal{final}}$, минимизирующее терминальное условие $q^{\textnormal{final}}$, то есть
     \begin{equation*}\label{eq:initial-x-final-definition}
         x^{\textnormal{final}} \in \textnormal{Argmin}\; q^{\textnormal{final}}(x).
     \end{equation*}
@@ -87,14 +87,14 @@
     Пусть $\hat u^{*}$, $\hat x^{*}$~--- оптимальное управление и соответствующая ему оптимальная траектория задачи \eqref{eq:initial-cauchy-task}-\eqref{eq:initial-cost-definition}.
     Тогда соответствующее управление для исходной задачи $u$, можно получить по формуле
     \begin{equation}\label{eq:initial-control-translate}
-        u^{k} = \frac{\hat \tau^{k+1} - \hat \tau^{k}}{\Delta t},
+        u^{k} = \frac{\hat \tau^{k} - \hat \tau^{k-1}}{\Delta t},
     \end{equation}
     где
     \begin{equation*}
         \begin{cases}
-            \hat \tau^k = M(\hat x_1^{k*})\hat u^{k*} + L(\hat x_1^{k*}, \hat x_2^{k*}), \mbox{ при } k=\overline{1, N}
+            \hat \tau^k = M(\hat x_1^{k*})\hat u^{k*} + L(\hat x_1^{k*}, \hat x_2^{k*}), \mbox{ при } k=\overline{1, N},
             \\
-            \hat \tau^{N+1} = 0.
+            \hat \tau^{0} = \tau^{\textnormal{start}}.
         \end{cases}
     \end{equation*}
 

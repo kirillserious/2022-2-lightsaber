@@ -93,7 +93,7 @@ if True:
         q = delta_t * cost.DummyPhase(),
         r = delta_t *  cost.Energy(),
         step = delta_t,
-        max_d=100.0,
+        max_d=10000000000.0,
     )
 
 if False:

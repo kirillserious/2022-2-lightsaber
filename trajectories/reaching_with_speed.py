@@ -36,6 +36,7 @@ e_speed_target = Vector([
 ])
 
 print(e_speed_target)
+exit()
 
 # Алгоритм
 delta_t = 0.001

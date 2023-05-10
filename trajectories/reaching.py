@@ -23,7 +23,8 @@ e_target = Vector([
     sum([l[i]*np.cos(z_final[i]) for i in range(3)]),
     sum([l[i]*np.sin(z_final[i]) for i in range(3)]),
 ])
-
+print(e_target)
+exit()
 
 # Алгоритм
 delta_t = 0.001

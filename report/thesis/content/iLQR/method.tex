@@ -35,7 +35,7 @@
         \end{aligned}\right.
     \end{equation}
     \begin{multline}\label{eq:ref-cost}
-        J = q^{N+1} + q_x^{N+1}\tilde x^{N+1} + \frac{1}{2}\langle \tilde x^{N+1}, q_{xx}^{N+1}\tilde x^{N+1} \rangle
+        J_{\delta} = q^{N+1} + q_x^{N+1}\tilde x^{N+1} + \frac{1}{2}\langle \tilde x^{N+1}, q_{xx}^{N+1}\tilde x^{N+1} \rangle
         + \\ +
         \sum_{k=1}^{N}\left[ q^{k} + q_x^{k}\tilde x^{k} + \frac{1}{2}\langle \tilde x^{k}, q_{xx}^{k}\tilde x^{k} \rangle \right]
         + \\ +
@@ -56,7 +56,7 @@
     \end{multline}
     где $\lambda^{k+1}$~--- мультипликаторы Лагранжа.
 
-    Оптимальное управление $\delta u$ должно удовлетворять необходимому условию
+    Оптимальное управление $\delta u^{*}$ должно удовлетворять необходимому условию
     \begin{equation*}
         \left.\frac{\partial H_k}{\partial (\delta u^k)}\right|_{\delta u^k = \delta u^{k*}}
         \!\!\!\!\!\!=
@@ -104,9 +104,17 @@
     \begin{theorem}
         Оптимальная поправка $\delta u$ для задачи~\eqref{eq:ref-system}-\eqref{eq:ref-cost} вычисляется как
         \begin{equation}\label{eq:method-optimal-control-result}
-            \delta u^k = - (r^k_{uu} + (f^k_u)\T S_{k+1} f^k_u)^{-1} ((f^k_u)\T S_{k+1} f^k_u \delta x + v^{k+1} + r^k_u),
+            \delta u^k = L_k \delta x^k + d^k,
         \end{equation}
-        где $S_k$ и $v^{k}$ высчитываются в обратном времени как
+        где
+        \begin{equation*}
+            \begin{aligned}
+                L_k &= - (r^k_{uu} + (f^k_u)\T S_{k+1} f^k_u)^{-1} (f^k_u)\T S_{k+1} f^k_u,
+                \\
+                d^k &= - (r^k_{uu} + (f^k_u)\T S_{k+1} f^k_u)^{-1} (v^{k+1} + r^k_u).
+            \end{aligned}
+        \end{equation*}
+        Причем переменные $S_k$, $v^{k}$ могут быть найдены в обратном времени из соотношений
         \begin{equation}\label{eq:method-s-v-result}
             \begin{aligned}
                 S_k &= \Phi^k_{21} + \Phi^k_{22} S_{k+1} (I - \Phi^k_{12}S_{k+1})^{-1} \Phi^k_{11},

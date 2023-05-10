@@ -6,10 +6,17 @@
     Ниже приведена таблица параметров, которые использовались для построения графиков в случае, если в подписи к соответствующему рисунку не оговорено обратное.
 
     \begin{flushleft}
-    \begin{tabular}{|p{2cm}|p{9cm}|p{4cm}|}
+    \begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
         \hline
         Cимвол & Краткое описание & Значение \\
-        \hline\hline
+        \hline
+        
+    \end{tabular}
+    \end{flushleft}
+
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
+        \hline
         \multicolumn{3}{|c|}{Параметры модели} \\
         \hline\hline
         $l$ & Длины сочленений & $[0,\!7,\, 0,\!7,\, 1,\!6]$
@@ -21,6 +28,9 @@
         $g$ & Ускорение свободного падения & $9,\!8$
         \\
         \hline
+    \end{tabular}\end{flushleft}
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
         \hline
         \multicolumn{3}{|c|}{Параметры задачи} \\
         \hline\hline
@@ -37,7 +47,11 @@
         $\tau^{\textnormal{start}}$ & Начальные моменты силы & $[0,\, 0,\, 0]$
         \\ \hline
         $w_2$ & Вес энергетического критерия & $10^{-2}$
-        \\ \hline\hline
+        \\ \hline
+    \end{tabular}\end{flushleft}
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
+        \hline
         \multicolumn{3}{|c|}{Параметры основного алгоритма}
         \\\hline\hline
         $\varepsilon$ & Критерий остановки & $10^{-2}$
@@ -45,28 +59,63 @@
         $\mu$ & Константа регуляризации матрицы $K$ & $10^{-8}$
         \\ \hline
         $\xi_1, \xi_2$ & Интервал регуляризации поправки & $10^{-1}, 10$
-        \\ \hline\hline
+        \\ \hline
+        $\gamma$ & Мультипликатор регуляризатора $\eta$ & $0,\!5$
+        \\ \hline
+    \end{tabular}\end{flushleft}
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
+        \hline
         \multicolumn{3}{|c|}{Параметры алгоритма поиска начальной траектории}
         \\ \hline\hline
         $\hat w_1$ & Вес фазового критерия & $10^{-2}$
         \\ \hline
         $\hat w_2$ & Вес критерия минимизации ускорения & $10^{-2}$
         \\ \hline
-    \end{tabular}
-    \end{flushleft}
+    \end{tabular}\end{flushleft}
 
-    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9cm}|p{4cm}|}
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
         \hline
-        \multicolumn{3}{|c|}{Задача перехода в целевое состояние (Разделы 4 и 5)}
+        \multicolumn{3}{|c|}{Задача <<Целевое состояние>> (Разделы 4 и 5)}
+        \\ \hline\hline
+        $\theta^{\textnormal{final}}$ & Целевые углы & $[-0,\!5,\, 1,\!1,\, 1,\!4]$
         \\ \hline
-        $\theta^{\textnormal{final}}$ & Целевые углы & $??$
+        $\dot \theta^{\textnormal{final}}$ & Целевые угловые скорости & $[ -5,\, -5,\, -5]$
         \\ \hline
-        $\dot \theta^{\textnormal{final}}$ & Целевые угловые скорости & $??$
-        \\ \hline
-        $\tau^{\textnormal{final}}$ & Целевые моменты силы & $??$
-        \\ \hline
-        $w_1$ & Вес фазового критерия & $??$
+        $\tau^{\textnormal{final}}$ & Целевые моменты силы & $[0,\,0,\,0]$
         \\ \hline
     \end{tabular}\end{flushleft}
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
+        \hline
+        \multicolumn{3}{|c|}{Задача <<Целевое положение схвата>> (Подраздел 6.1)}
+        \\ \hline\hline
+        $e^{\textnormal{final}}$ & Целевое положение & $[1,\!2,\,1,\!9]$
+        \\ \hline
+    \end{tabular}\end{flushleft}
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
+        \hline
+        \multicolumn{3}{|c|}{Задача <<Целевая скорость схвата>> (Подраздел 6.2)}
+        \\ \hline\hline
+        $e^{\textnormal{final}}$ & Целевое положение схвата & $[1,\!2,\,1,\!9]$
+        \\ \hline
+        $\dot e^{\textnormal{final}}$ & Целевая скорость схвата & $[-2,\!9,\,0,\!5]$
+        \\ \hline
+        $w_3$ & Вес критерия скорости & $0,\!5$
+        \\ \hline
+    \end{tabular}\end{flushleft}
+
+    \begin{flushleft}\begin{tabular}{|p{2cm}|p{9.7cm}|p{4cm}|}
+        \hline
+        \multicolumn{3}{|c|}{Задача <<Обход препятствия>> (Подраздел 6.3)}
+        \\ \hline\hline
+        $e^{\textnormal{obstacle}}$ & Положение препятствия & $[2,\!2,\,-2,\!0]$
+        \\ \hline
+        $r_{\textnormal{obstacle}}$ & Радиус препятствия & $0,\!1$
+        \\ \hline
+    \end{tabular}\end{flushleft}
+
     \clearpage
 \end{document}
