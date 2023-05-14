@@ -1,0 +1,49 @@
+\documentclass[../../doc.tex]{subfiles}
+\begin{document}
+    \section{Компоненты динамики}
+
+    В работе аналитически были получены выражения для матрицы инерции~$M$ и вектора центростремительных и кориолисовых сил~$L$,
+        участвующие в уравнении динамики предложенной математической модели~\eqref{eq:dynamic}.
+    Ниже приведены выражения для них. Все последующие вычисления проводились численно
+        на основании данных выражений
+        при помощи библиотеки численных вычислений \texttt{NumPy}.
+
+    Матрица $M(\theta) = M\T(\theta) \in \mathbb{R}^{3 \times 3}$:
+    \begin{equation*}
+        \begin{aligned}
+            M_{11} &= I_1 + l_1^2 \left(\frac{m_1}{4} + m_2 + m_3\right),
+            \\
+            M_{12} = M_{21} &= l_1 l_2 \left(\frac{m_2}{2} - m_3\right)\cos(\theta_1 - \theta_2),
+            \\
+            M_{13} = M_{31} &= \frac{1}{2}\,l_1\,l_3\,m_3\,cos(\theta_1 - \theta_3),
+            \\
+            M_{22} &= I_2 + l_2^2 \left(\frac{m_2}{4} + m_3\right),
+            \\
+            M_{23} = M_{32} &= \frac{1}{2}\,l_2\,l_3\,m_3\,\cos(\theta_2 - \theta_3),
+            \\
+            M_{33} &= I_3 + l_3^2\frac{m_3}{4}.
+        \end{aligned}
+    \end{equation*}
+
+    Вектор $L(\theta, \dot \theta) \in \mathbb{R}^{3}$:
+    \begin{multline*}
+        L_1 = g l_1 \left( \frac{m_1}{2} + m_2 + m_3\right) \cos\theta_1 
+                    +
+                    \frac{1}{2}l_1 l_2 m_2 \sin(\theta_1 - \theta_2) \dot \theta_2^2
+                    +\\+
+                    l_1 l_2 m_3 \sin(\theta_1 - \theta_2) \dot\theta_2^2
+                    +
+                    \frac{1}{2}l_1 l_3 m_3 \sin(\theta_1 - \theta_3) \dot\theta_3^2,
+    \end{multline*}
+    \begin{multline*}
+        L_2 = g l_2 \left( \frac{m_2}{2} + m_3 \right) \cos\theta_2
+            - \frac{1}{2} l_1 l_2 m_2 \sin(\theta_1 - \theta_2) \dot\theta_1^2
+            -\\- l_1 l_2 m_3 \sin(\theta_1 - \theta_2)\dot\theta_1^2
+            + \frac{1}{2} l_2 l_3 m_3 \sin(\theta_2 - \theta_3)\dot\theta_3^2,
+    \end{multline*}
+    \begin{multline*}
+        L_3 = \frac{1}{2}g l_3 m_3 \cos\theta_3
+            - \frac{1}{2} l_1 l_3 m_3 \sin(\theta_1 - \theta_3) \dot \theta_1^2
+            - \frac{1}{2} l_2 l_3 m_3 \sin(\theta_2 - \theta_3) \dot\theta_2^2.
+    \end{multline*}
+\end{document}
