@@ -6,12 +6,12 @@
     Алгоритм \ref{alg:initial:algo} резюмирует метод, предложенный в данном разделе.
     На Рис.~\ref{fig:initial:pendulum} представлен результат работы основного алгоритма из Раздела 4 для задачи \eqref{eq:ilqr-algo:cost} с построенным начальным управлением по предложенному алгоритму.
 
-
+    \clearpage
     \RestyleAlgo{ruled}
     \begin{rusalgorithm}\caption{Поиск начальной траектории}\label{alg:initial:algo}
         \DontPrintSemicolon
         \SetKwProg{Function}{function}{\;begin}{end function}
-        \Function{InitialControl}{
+        \Function{InitialControl($x^{\textnormal{final}}$)}{
             \tcc{Обратный проход}
             $S_{N+1}, v^{N+1} \gets $ \eqref{eq:initial-S-v-boundary-condition}\;
             \For{$k \gets N$ \KwTo $1$}{
@@ -19,7 +19,7 @@
             }
             \;
             \tcc{Прямой проход}
-            $\hat x^0 \gets x^{\textnormal{start}}$\;
+            $\hat x^0 \gets \theta^{\textnormal{start}}, \dot \theta^{\textnormal{start}}$\;
             \For{$k \gets 1$ \KwTo $N$}{
                 $\hat u^k, \hat x^{k+1} \gets $ \eqref{eq:initial-optimal-control-result}, \eqref{eq:initial-cauchy-task}\;
             }

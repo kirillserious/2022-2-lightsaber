@@ -1,17 +1,11 @@
-@book{texbook,
-  author = {Donald E. Knuth},
-  year = {1986},
-  title = {The {\TeX} Book},
-  publisher = {Addison-Wesley Professional}
-}
-
 % Книга про роботов
 @book{kolubin2017,
   author = {C. А. Колюбин},
   year = {2017},
   title = {Динамика робототехнических систем},
   address = {Санкт-Петербург},
-  publisher = {Редакционно-издательский отдел Университета ИТМО}
+  publisher = {Редакционно-издательский отдел Университета ИТМО},
+  language = {russian},
 }
 
 % Теормех: твердое тело, теорема Кенинга и т.д.
@@ -19,19 +13,22 @@
   author         = {В. Ф. Журавлёв},
   publisher      = {М:~Физматлит},
   title          = {Основы теоретической механики},
-  year           = {2001}
+  year           = {2001},
+  address       = {Москва},
+  language = {russian},
 }
 
 % Статья, где показано, что энергетические затраты решающие при выборе
 % паттерна движения
 @article{todorov2002,
-  author = {E. Todorov, M. Jordan},
+  author = {E. Todorov and M. Jordan},
   title = {Optimal feedback control as a theory of motor coordination},
   journal = {Nature Neuroscience},
   year = {2002},
   volume = {5},
   number = {11},
-  pages = {1226-1235}
+  pages = {1226--1235},
+  language = {english},
 }
 
 % Энергетические затраты -- это рывок схвата
@@ -42,30 +39,33 @@
   title           = {An organizing principle for a class of voluntary movement},
   volume          = {4},
   pages           = {2745-2754},
-  year            = {1984}
+  year            = {1984},
+  language = {english},
 }
 
 % Энергетические затраты -- это изменение крутящего момента
 @article{uno1989,
-  author          = {Y. Uno, M. Kawato and R. Suzuki},
+  author          = {Y. Uno and M. Kawato and R. Suzuki},
   journal         = {Biological Cybernetics},
   volume          = {61},
   number          = {2},
   title           = {Formation and control of optimal trajectory in human multijoint arm movement - minimum torque-change model},
   year            = {1989},
-  pages           = {89-101}
+  pages           = {89--101},
+  language = {english},
 }
 
 % Сравнение модели минимального рывка и модели минимального крутящего момента.
 % Второй -- чуть лучше
 @article{breteler2002,
-author = {M. Breteler, R. Meulenbroek and S. Gielen},
+author = {M. Breteler and R. Meulenbroek and S. Gielen},
 year = {2002},
 month = {02},
-pages = {69-83},
+pages = {69--83},
 title = {An Evaluation of the Minimum-Jerk and Minimum Torque-Change Principles at the Path, Trajectory, and Movement-Cost Levels},
 volume = {6},
-journal = {Motor control}
+journal = {Motor control},
+  language = {english},
 }
 
 % Энергетические затраты надо брать с задержкой на подумать по результатам того, что человек увидел
@@ -75,7 +75,8 @@ journal = {Motor control}
   title           = {Signal-dependent noise determines motor planning},
   volume          = {394},
   month           = {August},
-  year            = {1998}
+  year            = {1998},
+  language = {english},
 }
 
 % Достаточные условия существования и единственности задачи Коши
@@ -84,7 +85,8 @@ journal = {Motor control}
   publisher      = {М:~Наука},
   title          = {Дифференциальные уравнения с разрывной правой частью},
   address        = {Москва},
-  year           = {1985}
+  year           = {1985},
+  language = {russian},
 }
 
 % iLQR почему-то SLQ - Sequentional Linear Quadrative
@@ -95,17 +97,19 @@ journal = {Motor control}
   title           = {An efficient sequential linear quadratic algorithm for solving nonlinear optimal control problems},
   volume          = {50},
   year            = {2005},
-  pages           = {2043–2047}
+  pages           = {2043–-2047},
+  language = {english},
 }
 
 % Метод расширенного лангранжиана
 @book{birgin2009,
-  author         = {Birgin, Ernesto G. and Martínez, J. M.},
+  author         = {E. G. Birgin and J. M. Martínez},
   publisher      = {Springer US},
   title          = {Practical augmented Lagrangian methods},
   year           = {2009},
   address        = {Boston, MA},
-  pages          = {3013--3023}
+  pages          = {3013--3023},
+  language = {english},
 }
 
 % Метод ДДП второго порядка
@@ -116,29 +120,32 @@ journal = {Motor control}
   title           = {A Second-order Gradient Method for Determining Optimal Trajectories of Non-linear Discrete-time Systems},
   volume          = {3},
   year            = {1966},
-  pages           = {85-95},
+  pages           = {85--95},
+  language = {english},
 }
 
 % Метод ДДП и вообще про жизнь
 @article{murray1984,
   title={Differential dynamic programming and Newton's method for discrete optimal control problems},
-  author={Murray, D. and Yakowitz, S.},
+  author={D. Murray and S. Yakowitz},
   journal={Journal of Optimization Theory and Applications},
   volume={43},
   number={3},
   pages={395--414},
   year={1984},
-  publisher={Kluwer Academic Publishers-Plenum Publishers New York}
+  publisher={Kluwer Academic Publishers-Plenum Publishers New York},
+  language = {english},
 }
 
 % iLQR от Тодорова
 @inproceedings{li2004,
   title={Iterative linear quadratic regulator design for nonlinear biological movement systems.},
-  author={Li, Weiwei and Todorov, Emanuel},
+  author={W. Li and E. Todorov},
   booktitle={ICINCO (1)},
   pages={222--229},
   year={2004},
-  organization={Citeseer}
+  organization={Citeseer},
+  language = {english},
 }
 
 % Сравнение DDP, iLQR и его метода
@@ -147,5 +154,80 @@ journal = {Motor control}
   booktitle={2016 IEEE 55th Conference on Decision and Control (CDC)}, 
   title={Derivative-free trajectory optimization with unscented dynamic programming}, 
   year={2016},
-  pages={3642-3647}
+  pages={3642--3647},
+  language = {english},
+}
+
+@book{pontryagin1983,
+  author         = {Л. С. Понтрягин and В. Г. Болтянский and Р. В. Гамкрелидзе and Е. Ф. Мищенко},
+  publisher      = {М: Наука},
+  title          = {Математическая теория оптимальных процессов},
+  year           = {1983},
+  address        = {Москва},
+  edition        = {4-ая, стереотипная},
+  language       = {russian},
+}
+
+@INPROCEEDINGS{egorov2023,
+  author          = {К. Ю. Егоров and И. В. Востриков},
+  booktitle       = {<<Ломоносовские чтения --- 2023>>},
+  title           = {Математическое моделирование движения руки и поведенческих движений},
+  year            = {2023},
+  month           = {04},
+  address         = {Москва},
+  language        = {russian},
+}
+
+@article{maroger2022,
+author = {I. Maroger and O. Stasse and B. Watier},
+title = {Inverse optimal control to model human trajectories during locomotion},
+journal = {Computer Methods in Biomechanics and Biomedical Engineering},
+volume = {25},
+number = {5},
+pages = {499--511},
+year  = {2022},
+publisher = {Taylor & Francis},
+language        = {english},
+}
+
+@article{maneeshika2023,
+title = {Biosignal-based co-adaptive user-machine interfaces for motor control},
+journal = {Current Opinion in Biomedical Engineering},
+volume = {27},
+year = {2023},
+author = {M. M. Madduri and S. A. Burden and A. L. Orsborn},
+language        = {english},
+}
+
+@ARTICLE{wang2008,
+  author={Wang, J. M. and Fleet, D. J. and Hertzmann, A.},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={Gaussian Process Dynamical Models for Human Motion}, 
+  year={2008},
+  volume={30},
+  number={2},
+  pages={283--298},
+  language        = {english},
+}
+
+@Inbook{mitrovic2010,
+author="Mitrovic, D.
+and Klanke, S.
+and Vijayakumar, S.",
+title="Adaptive Optimal Feedback Control with Learned Internal Dynamics Models",
+bookTitle="From Motor Learning to Interaction Learning in Robots",
+year="2010",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="65--84",
+language       = {english},
+}
+
+@INPROCEEDINGS{todorov2005,
+  author={Todorov, E. and W. Li},
+  booktitle={American Control Conference, 2005.}, 
+  title={A generalized iterative LQG method for locally-optimal feedback control of constrained nonlinear stochastic systems}, 
+  year={2005},
+  pages={300--306},
+  language= {english},
 }

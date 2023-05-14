@@ -56,7 +56,7 @@
     \end{multline}
     где $\lambda^{k+1}$~--- мультипликаторы Лагранжа.
 
-    Оптимальное управление $\delta u^{*}$ должно удовлетворять необходимому условию
+    Согласно принципу максимума Понтрягина \cite{pontryagin1983} оптимальное управление $\delta u^{*}$ должно удовлетворять необходимому условию
     \begin{equation*}
         \left.\frac{\partial H_k}{\partial (\delta u^k)}\right|_{\delta u^k = \delta u^{k*}}
         \!\!\!\!\!\!=
@@ -66,7 +66,7 @@
     \begin{equation}\label{eq:delta-u}
         \delta u^{k*} = - (r_{uu}^k)^{-1}[(f_u^k)\T\lambda^{k+1} + r_u^k] - \bar u^k.
     \end{equation}
-    При этом имеет силу сопряженная задача:
+    И при этом имеет силу сопряженная задача:
     \begin{equation}\label{eq:lambda-system}
         \left\{\begin{aligned}
             \lambda^k = (f_x^k)\T \lambda^{k+1} + q_x^k + q_{xx}^k(\bar x^k + \delta x^k)

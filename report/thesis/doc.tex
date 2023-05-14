@@ -6,6 +6,8 @@
 \renewcommand{\appendixtocname}{Приложения}
 \renewcommand{\appendixpagename}{Приложения}
 \usepackage{multirow}
+\usepackage{babelbib}
+
 \usepackage{subfiles}
 \graphicspath{{\subfix{./img}}}
 \begin{document}
@@ -53,7 +55,8 @@
                 \clearpage
 
         \addcontentsline{toc}{section}{Cписок литературы}
-        \bibliographystyle{plain}
+        \nocite{*}
+        \bibliographystyle{babplain}
         \bibliography{refs}
         \clearpage
 
