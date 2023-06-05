@@ -38,7 +38,11 @@
 
     \begin{frame}{Математическое моделирование}
         \centering{
-            \includegraphics[width=0.7\textwidth]{img/arm.png}
+            \hfill
+            \includegraphics[width=0.3\textwidth]{img/model/arm.jpeg}
+            \hfill
+            \includegraphics[width=0.3\textwidth]{img/model/schema.png}
+            \hfill
         }
         \begin{block}{Начальные данные}
             \begin{itemize}
@@ -75,7 +79,7 @@
 
     \begin{frame}{Математическое моделирование}
         \begin{figure}
-            \includegraphics[width=0.8\textwidth]{img/discrete_pendulum.pdf}
+            \includegraphics[width=0.6\textwidth]{img/model/pendulum.pdf}
             \caption{Траектория руки в свободном падении}
         \end{figure}
     \end{frame}
@@ -162,8 +166,14 @@
             \begin{enumerate}
                 \item Пусть на $k$ шаге алгоритма дано \textit{референсное} управление $\bar u$ и соответствующая ему траектория $\bar x$.
                 \item Вдоль траектории линеаризуем систему, квадратично аппроксимируем функционал качества.
-                \item Построим оптимальную поправку на управление {\centering $\delta u = \delta u(\bar x, \bar u).$}
-                \item Если поправка выходит за допустимую область, то есть $\bar u^k + \delta u^k \notin \mathcal{U}^k$, то берем в качестве поправки $\eta\delta u^k$ такую, что {\centering $\bar u^k + \eta\delta u^k \in \partial \mathcal{U}^k.$}
+                \item Построим оптимальную поправку на управление {\centering $\delta u = \delta u(\bar x, \bar u)$ как линейно-квадратичный регулятор аппроксимированной задачи.}
+                \item Если поправка выходит за допустимую область, то есть 
+                $\xi_1
+            \leqslant
+            \frac{J(\bar u) - J(\bar u + \delta u^{*}(\eta))}{J_{\delta}(0) - J_{\delta}(\delta u^{*}(\eta))}
+            \leqslant
+            \xi_2$
+                , то берем в качестве поправки $\eta\delta u$.
                 \item Если мы не достигли требуемой точности, то есть $|J(\bar u) - J(\bar u + \delta u)| \geqslant \varepsilon$, повторяем действия с новым референсным управлением.
             \end{enumerate}
         \end{block}
@@ -217,10 +227,10 @@
         $$
         \begin{figure}
             \centering{
-                \includegraphics[width=0.45\textwidth]{img/ddp_pendulum.pdf}
-                \includegraphics[width=0.45\textwidth]{img/ddp_empty.pdf}
+                \includegraphics[width=0.45\textwidth]{img/iLQR/pendulum.pdf}
+                \includegraphics[width=0.45\textwidth]{img/iLQR/endpoint.pdf}
             }
-            \caption{Траектории руки и схвата для задачи при нулевом начальном управлении $\bar u \equiv 0$. Показана каждая 3-я итерация алгоритма.}
+            \caption{Траектории руки и схвата для задачи при нулевом начальном управлении $\bar u \equiv 0$.}
         \end{figure}
     \end{frame}
 
@@ -245,7 +255,7 @@
         $$
         Тогда система примет вид:
         \begin{equation}\label{eq:linear}
-            x^{k+1} =  \underbrace{\textnormal{diag}\{I,O\}}_{A} x^{k} + \underbrace{\textnormal{diag}\{O, I\}}_{B} v^{k}
+            x^{k+1} =  A x^{k} + B v^{k}
         \end{equation}
 
         Выберем $x^{\textnormal{final}} \in \textnormal{Argmin}_{x} q^{N+1}(x)$ и решим задачу минимизации
@@ -256,7 +266,7 @@
 
         Получим референсное управление $u$ из соотношения
         $$
-            \tau^k = M(x_1^k)v^k_* + L(x_1^k,x_2^k) \;\Longrightarrow\; u^{k} = \frac{\tau^{k+1} - \tau^{k}}{\Delta t}
+            \tau^k = M(x_1^k)v^k_* + L(x_1^k,x_2^k) \;\Longrightarrow\; u^{k} = \frac{\tau^{k} - \tau^{k-1}}{\Delta t}
         $$
     \end{frame}
 
@@ -285,15 +295,57 @@
         $$
         \begin{figure}
             \centering{
-                \includegraphics[width=0.45\textwidth]{img/ddp_pendulum.pdf}
-                \includegraphics[width=0.45\textwidth]{img/ddp_dummy.pdf}
+                \includegraphics[width=0.45\textwidth]{img/initial/pendulum.pdf}
+                \includegraphics[width=0.45\textwidth]{img/initial/endpoint.pdf}
             }
-            \caption{Траектории руки и схвата для задачи при новом начальном управлении. Показана \textit{КАЖДАЯ} итерация алгоритма.}
+            \caption{Траектории руки и схвата для задачи при новом начальном управлении.}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{Пример: целевое состояние}
+        $$
+            q_{\textnormal{терм.}}(x) = \| x - x^{\textnormal{final}}\|^2
+        $$
+        \begin{figure}
+            \centering{
+                \includegraphics[width=0.6\textwidth]{img/initial/compare}
+            }
+            \caption{Сравнение скорости сходимости алгоритма в зависимости от начальной траектории.}
         \end{figure}
     \end{frame}
 
 
     \section{Применение в классических задачах}
+
+    \begin{frame}{Задача: целевое положение схвата}
+        $$
+            q_{\textnormal{терм.}}(x) = \| e_{\textnormal{схват}}(x) - e^{\textnormal{final}}\|^2
+        $$
+        \begin{figure}
+            \centering{
+                \includegraphics[width=0.45\textwidth]{img/examples/reaching_pendulum}
+                \includegraphics[width=0.45\textwidth]{img/examples/reaching_endpoint}
+            }
+            \caption{Траектории руки и схвата для задачи.}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}{Задача: целевое положение и скорость схвата}
+        $$
+            q_{\textnormal{терм.}}(x)
+            =
+            \| e_{\textnormal{схват}}(x) - e^{\textnormal{final}}\|^2
+            +
+            w \| \dot e_{\textnormal{схват}}(x) - \dot e^{\textnormal{final}}\|^2
+        $$
+        \begin{figure}
+            \centering{
+                \includegraphics[width=0.45\textwidth]{img/examples/reaching_speed_pendulum}
+                \includegraphics[width=0.45\textwidth]{img/examples/reaching_speed_endpoint}
+            }
+            \caption{Траектории руки и схвата для задачи.}
+        \end{figure}
+    \end{frame}
 
     \begin{frame}{Задача: обход препятствия}
         $$
@@ -305,38 +357,8 @@
         $$
         \begin{figure}
             \centering{
-                \includegraphics[width=0.45\textwidth]{img/obstacle_pendulum}
-                \includegraphics[width=0.45\textwidth]{img/ddp_obstacle}
-            }
-            \caption{Траектории руки и схвата для задачи.}
-        \end{figure}
-    \end{frame}
-
-    \begin{frame}{Задача: целевое положение схвата}
-        $$
-            q_{\textnormal{терм.}}(x) = \| e_{\textnormal{схват}}(x) - e^{\textnormal{final}}\|^2
-        $$
-        \begin{figure}
-            \centering{
-                \includegraphics[width=0.45\textwidth]{img/reaching_pendulum}
-                \includegraphics[width=0.45\textwidth]{img/ddp_reaching}
-            }
-            \caption{Траектории руки и схвата для задачи.}
-        \end{figure}
-    \end{frame}
-
-    \begin{frame}{Задача: целевое положение схвата}
-        $$
-            \begin{aligned}
-            & q_{\textnormal{терм.}}(x) = \| e_{\textnormal{схват}}(x) - e^{\textnormal{final}}\|^2
-            \\
-            & q_{\textnormal{фаз.}}(x) = \Sigma_{i=2}^{3} (x_i - x_{i-1})^2
-            \end{aligned}
-        $$
-        \begin{figure}
-            \centering{
-                \includegraphics[width=0.45\textwidth]{img/reaching_phase_pendulum}
-                \includegraphics[width=0.45\textwidth]{img/ddp_reaching_phase}
+                \includegraphics[width=0.45\textwidth]{img/examples/obstacle_pendulum_less}
+                \includegraphics[width=0.45\textwidth]{img/examples/obstacle_endpoint_less}
             }
             \caption{Траектории руки и схвата для задачи.}
         \end{figure}
