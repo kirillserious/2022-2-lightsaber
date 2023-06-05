@@ -37,25 +37,26 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from tqdm import tqdm
 
-lqr_cost = [2.827790747247821, 0.8019510559005684, 0.45734151090075237, 0.4560181402567976]
-empty_cost = [70.37746380020212, 58.59558697629737, 47.91318130772849, 38.29744369196915, 29.779676332919372, 22.397019743585787, 16.143297225204737, 10.966151791412665, 6.802060919316443, 3.6236686101711326, 1.4740907129469702, 0.49028857749956295, 0.4570647599846641, 0.456019484491975]
+if False:
+    lqr_cost = [2.827790747247821, 0.8019510559005684, 0.45734151090075237, 0.4560181402567976]
+    empty_cost = [70.37746380020212, 58.59558697629737, 47.91318130772849, 38.29744369196915, 29.779676332919372, 22.397019743585787, 16.143297225204737, 10.966151791412665, 6.802060919316443, 3.6236686101711326, 1.4740907129469702, 0.49028857749956295, 0.4570647599846641, 0.456019484491975]
 
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
 
-ax.plot(list(range(1, len(empty_cost)+1)), [c - empty_cost[len(empty_cost) - 1] for c in empty_cost], 'o-')
-ax.plot(list(range(1, len(lqr_cost)+1)), [c - lqr_cost[len(lqr_cost) - 1] for c in lqr_cost], 'o-')
-ax.set_yscale('log')
-ax.grid(True)
-ax.set_xlim([1, 14])
-ax.set_ylim([0, 100])
-ax.set_xlabel('Итерация алгоритма')
-ax.set_ylabel('$J - J*$')
-ax.legend(["Нулевое реф. управление", "Лин.-квадр. реф. управление"])
-plt.savefig('compare.pdf', format='pdf', bbox_inches='tight', dpi=1200)
-#plt.show()
+    ax.plot(list(range(1, len(empty_cost)+1)), [c - empty_cost[len(empty_cost) - 1] for c in empty_cost], 'o-')
+    ax.plot(list(range(1, len(lqr_cost)+1)), [c - lqr_cost[len(lqr_cost) - 1] for c in lqr_cost], 'o-')
+    ax.set_yscale('log')
+    ax.grid(True)
+    ax.set_xlim([1, 14])
+    ax.set_ylim([0, 100])
+    ax.set_xlabel('Итерация алгоритма')
+    ax.set_ylabel('$J - J*$')
+    ax.legend(["Нулевое реф. управление", "Лин.-квадр. реф. управление"])
+    plt.savefig('compare.pdf', format='pdf', bbox_inches='tight', dpi=1200)
+    #plt.show()
 
-exit()
+    exit()
 # Входные даннные
 
 z_final = Vector([-0.5, 1.1, 1.4, -5.0, -5.0, -5.0])
@@ -152,6 +153,6 @@ for i in range(15):
     u_nominal = u
 print(lqr_cost)
 print(empty_cost)
-plt.plot(list(range(1, len(lqr_cost)+1)), [c - lqr_cost[len(lqr_cost) - 1] for c in lqr_cost])
-plt.plot(list(range(1, len(empty_cost)+1)), [c - empty_cost[len(empty_cost) - 1] for c in empty_cost])
-plt.show()
+#plt.plot(list(range(1, len(lqr_cost)+1)), [c - lqr_cost[len(lqr_cost) - 1] for c in lqr_cost])
+#plt.plot(list(range(1, len(empty_cost)+1)), [c - empty_cost[len(empty_cost) - 1] for c in empty_cost])
+#plt.show()
